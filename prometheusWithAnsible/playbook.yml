@@ -1,0 +1,20 @@
+---
+#- hosts: prometheus
+- hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - prometheus
+#    - prometheus-blackbox-exporter
+#    - prometheus-node-exporter
+#    - prometheus-alertmanager
+#    - query-sql-exporter
+
+#- hosts: node_exporter
+#- hosts: localhost
+#  become: yes
+#  become_user: root
+#  become_method: sudo
+#  roles:
+#    - prometheus-node-exporter

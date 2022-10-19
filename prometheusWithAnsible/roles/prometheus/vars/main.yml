@@ -1,0 +1,8 @@
+---
+serviceName: "prometheus"
+userId: "prometheus"
+groupId: "prometheus"
+exec_command: "/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.conf --storage.tsdb.path=/data/prometheus"
+version: "2.37.0"
+serverhostname1: "localhost"
+serverhostname2: "localhost1"

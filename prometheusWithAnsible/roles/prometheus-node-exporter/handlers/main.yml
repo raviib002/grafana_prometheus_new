@@ -1,0 +1,5 @@
+- name: Restart the node_exporter service
+  service:
+    name: node_exporter
+    state: restarted
+  listen: event_restart_node_exporter

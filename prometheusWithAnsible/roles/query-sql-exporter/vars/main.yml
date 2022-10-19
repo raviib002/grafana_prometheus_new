@@ -1,0 +1,13 @@
+---
+# vars file for ansible-prometheus-sql-exporter
+
+# Internal vars, do not touch nor override
+__prom_sexp_tarball: "sql_exporter-{{ prom_sexp_version }}.linux-amd64.tar.gz"
+__prom_sexp_nexus_bin_url: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/query-exporter/query-exporter-{{ prom_sexp_version }}.pex"
+__prom_sexp_default_listen_address: ":9399"
+__prom_sexp_default_metrics_path: "/metrics"
+__prom_sexp_default_scrape_timeout: 10s
+__prom_sexp_default_scrape_timeout_offset: 500ms
+__prom_sexp_default_min_interval: 0s
+__prom_sexp_default_max_connections: 3
+__prom_sexp_default_max_idle_connections: 3

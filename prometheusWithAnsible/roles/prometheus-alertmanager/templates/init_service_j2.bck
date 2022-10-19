@@ -1,0 +1,30 @@
+[Unit]
+Description={{serviceName}}
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ userId }}
+Group={{ groupId }}
+Restart=on-failure
+Type=simple
+ExecStart={{ exec_command }}
+
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Prometheus Alertmanager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=alertmanager
+Group=alertmanager
+Type=simple
+ExecStart=/usr/local/bin/alertmanager 
+  --config.file /etc/alertmanager/alertmanager.yml 
+  --storage.path /var/lib/alertmanager/
+
+[Install]
+WantedBy=multi-user.target

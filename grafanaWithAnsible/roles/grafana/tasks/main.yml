@@ -1,0 +1,69 @@
+---
+# tasks file for roles/grafana
+- name: Downloading Grafana RPM file from Nexus
+  shell: "wget https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ version }}.x86_64.rpm"
+
+- name: Installing Grafana
+  shell: "yum install grafana-{{ version }}.x86_64.rpm -y"
+
+- name: start service grafana-server
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes
+
+- name: wait for service up
+  uri:
+    url: "http://127.0.0.1:3000"
+    status_code: 200
+  register: __result
+  until: __result.status == 200
+  retries: 120
+  delay: 1
+
+- name: change admin password for grafana gui
+  shell : "grafana-cli admin reset-admin-password {{ grafana_admin_password }}"
+  register: __command_admin
+  changed_when: __command_admin.rc !=0
+
+- name: change admin user
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: "{{ item.before }}"
+    line: "{{ item.after }}"
+  with_items:
+  - { before: "^;admin_user = admin", after: "admin_user = {{ grafana_admin_user }}"}
+  - { before: "^;admin_password = admin", after: "admin_password = {{ grafana_admin_password }}"}
+
+- name: install grafana-piechart-panel plugin
+  unarchive:
+    src: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-piechart-panel/grafana-piechart-panel-1.6.2.zip"
+    dest: /var/lib/grafana/plugins/
+    remote_src: yes
+
+- name: install camptocamp-prometheus-alertmanager-datasource plugin
+  unarchive:
+    src: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-prometheus-alertmanager-datasource/grafana-prometheus-alertmanager-datasource-1.0.0.zip"
+    dest: /var/lib/grafana/plugins/
+    remote_src: yes
+
+#- name: add prometheus datasource
+#  grafana_datasource:
+#    name: "prometheus-local"
+#    grafana_url: "http://127.0.0.1:3000"
+#    grafana_user: "{{ grafana_admin_user }}"
+#    grafana_password: "{{ grafana_admin_password }}"
+#    org_id: "1"
+#    ds_type: "prometheus"
+#    ds_url: "http://127.0.0.1:9090"
+#  changed_when: false
+
+- name: restart_grafana
+  systemd:
+    name: grafana-server
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: Removing Grafana RPM file which we downloaded from Nexus
+  shell: "rm -r grafana-{{ version }}.x86_64.rpm*"
