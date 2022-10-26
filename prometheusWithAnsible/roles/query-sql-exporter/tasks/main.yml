@@ -1,46 +1,132 @@
----
-# tasks file for ansible-prometheus-sql-exporter
+- name: Downloading epel-release repo dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+  shell: "wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
 
-- name: "Create Prometheus SQL Exporter group"
-  group:
-    name: "{{ prom_sexp_group }}"
-    state: present
+- name: Installing epel-release repo dependency
+  shell: "yum install epel-release-latest-7.noarch.rpm -y"
 
-- name: "Create Prometheus SQL Exporter system user"
-  user:
-    name: "{{ prom_sexp_user }}"
-    group: "{{ prom_sexp_group }}"
-    createhome: no
-    shell: "/sbin/nologin"
-    comment: "Prometheus SQL Exporter user"
-    state: present
+- name: Downloading python3-3.6.8-18.el7.x86_64.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+  shell: "wget http://mirror.centos.org/centos/7/updates/x86_64/Packages/python3-3.6.8-18.el7.x86_64.rpm"
 
-- name: "Create Prometheus SQL Exporter directories"
+- name: Installing python3-3.6.8-18.el7.x86_64.rpm dependency
+  shell: "yum install python3-3.6.8-18.el7.x86_64.rpm --skip-broken -y"
+   
+#- name: Downloading python3-pip-9.0.3-8.el7.noarch.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+#  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/python3-pip-9.0.3-8.el7.noarch.rpm"
+
+- name: Installing python3-pip dependency
+  shell: "yum install python3-pip -y"
+
+- name: Downloading libaio-0.3.109-13.el7.x86_64.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/libaio-0.3.109-13.el7.x86_64.rpm"
+
+- name: Installing libaio-0.3.109-13.el7.x86_64.rpm dependency
+  shell: "yum install libaio-0.3.109-13.el7.x86_64.rpm -y"
+
+#- name: Downloading oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm"
+  
+- name: Installing oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm dependency
+  shell: "yum install oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm -y"
+
+- name: Downloading postgresql-libs-9.2.24-1.el7_5.x86_64.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-libs-9.2.24-1.el7_5.x86_64.rpm"
+  shell: "wget  	http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-libs-9.2.24-4.el7_8.x86_64.rpm"
+
+- name: Installing postgresql-libs-9.2.24-1.el7_5.x86_64.rpm dependency
+  shell: "yum install postgresql-libs-9.2.24-4.el7_8.x86_64.rpm -y"
+
+- name: Downloading postgresql-9.2.24-1.el7_5.x86_64.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-9.2.24-1.el7_5.x86_64.rpm"
+  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-9.2.24-4.el7_8.x86_64.rpm"
+
+- name: Installing postgresql-9.2.24-1.el7_5.x86_64.rpm dependency
+  shell: "yum install postgresql-9.2.24-4.el7_8.x86_64.rpm --skip-broken -y"
+
+- name: Downloading postgresql-devel-9.2.24-1.el7_5.x86_64.rpm dependency RPM file from Nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-devel-9.2.24-1.el7_5.x86_64.rpm"
+  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-devel-9.2.24-4.el7_8.x86_64.rpm"
+
+- name: Installing postgresql-devel-9.2.24-1.el7_5.x86_64.rpm dependency
+  shell: "yum install postgresql-devel-9.2.24-4.el7_8.x86_64.rpm --skip-broken -y"
+
+########################################################################################################################
+
+- name: Setting-up the LD Library path
+  shell: "export LD_LIBRARY_PATH=/usr/lib/oracle/12.2/client64/lib"
+
+########################################################################################################################
+
+#- name: Downloading query exporter .pex file from nexus
+  #shell: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/query-exporter/query-exporter-2.6.2.pex"
+
+- name: Installing Query exporter .pex file into bin directory
+  #shell: "install -m 0755 query-exporter-*.pex /bin/query-exporter"
+  shell: "install -m 0755 /var/query-exporter-*.pex /bin/query-exporter"
+
+########################################################################################################################
+
+- name: Creating sqlexporter config directory under data directory
   file:
-    path: "{{ item }}"
+    path: /data/sqlexporter_config
     state: directory
-    owner: "{{ prom_sexp_user }}"
-    group: "{{ prom_sexp_group }}"
-    mode: "u=rwx,g=rx,o="
-  with_items:
-    - "{{ prom_sexp_path_install }}"
-    - "{{ prom_sexp_path_logs }}"
-    - "{{ prom_sexp_path_config }}"
-    - "{{ prom_sexp_path_collectors }}"
+    owner: "root"
+    group: "root"
+    mode: 0775
 
-- name: "Install Prometheus SQL Exporter binaries"
-  include_tasks: setup-sqlexporter.yml
+- name: Copy config yml file into var directory
+  template:
+    src: config.yaml
+    dest: /var/config.yaml
 
-- name: "Ensure Prometheus collector files are configured"
-  include_tasks: setup-collector-file.yml
-  with_items: "{{ prom_sexp_collectors }}"
-  loop_control:
-    loop_var: prom_sexp_collector
-  when: prom_sexp_collectors is defined and prom_sexp_collectors != None
+- name: Copy config yml file updater shell script into var directory
+  template:
+    src: update_config_yml.sh
+    dest: /var/update_config_yml.sh
 
-- name: "Ensure Prometheus SQL Exporter targets are configured"
-  include_tasks: setup-targets.yml
-  with_items: "{{ prom_sexp_targets }}"
-  loop_control:
-    loop_var: prom_sexp_target
-  when: prom_sexp_targets is defined and prom_sexp_targets != None
+- name: executing the config yaml updater shell script
+  shell: "sh /var/update_config_yml.sh"
+
+- name: copy config yaml file into data sqlexporter_config directory
+  shell: "cp -r /var/config.yaml /data/sqlexporter_config/"
+
+- name: Copy oracle path shell script file into etc profile.d directory to set ld library path
+  template:
+    src: oracle_path.sh
+    dest: /etc/profile.d/oracle_path.sh
+  
+- name: Copy sqlexporter service file into systemd directory
+  template:
+    src: sqlexporter.service
+    dest: /etc/systemd/system/sqlexporter.service
+
+- name: start service grafana-server
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes
+
+- name: waiting 5 seconds to execute next (waiting for service up) 
+  shell: "sleep 5"
+
+- name: wait for service up
+  uri:
+    url: "http://127.0.0.1:9560/metrics"
+    status_code: 200
+  register: __result
+  until: __result.status == 200
+  retries: 120
+  delay: 1
+
+- name: Delete config yaml file from var folder
+  file:
+    path: '/var/config.yaml'
+    state: absent
+
+- name: Delete config yaml file updater shell script from var folder
+  file:
+    path: '/var/update_config_yml.sh'
+    state: absent

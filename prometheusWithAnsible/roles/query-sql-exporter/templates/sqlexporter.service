@@ -1,0 +1,16 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/usr/local/bin/node_exporter --config.file /data/sqlexporter_config/config.yaml
+LD_LIBRARY_PATH=/usr/lib/oracle/12.2/client64/lib
+
+[Install]
+WantedBy=multi-user.target
+
+

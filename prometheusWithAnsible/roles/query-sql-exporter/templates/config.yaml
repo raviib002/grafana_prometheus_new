@@ -1,0 +1,59 @@
+     databases:
+  db1:
+    dsn: '%DSN%'
+metrics:
+  #metric1:
+    #type: gauge
+    #description: A sample gauge
+  #metric2:
+    #type: summary
+   # description: A sample summary
+  #metric3:
+    #type: histogram
+    #description: A sample histogram
+    #buckets: [10, 20, 50, 100, 1000]
+  #metric4:
+   # type: enum
+    #description: A sample enum
+    #states: [foo, bar, baz]
+  alerts:
+    type: gauge
+    labels: [tenant_id]
+  transactions_grouped:
+    type: gauge
+    labels: [tenant_id,object_type]
+  transactions:
+    type: gauge
+  resolved_alerts:
+    type: gauge
+    labels: [tenant_id,resolution]
+  alerts_total:
+    type: gauge
+queries:
+  alerts:
+    interval: 60
+    databases: [db1]
+    metrics: [alerts]
+    sql: SELECT tenant_id,count(*) AS alerts FROM %MAIN_SCHEMA_NAME%.ic_alerts group by tenant_id
+  Transactions_grouped:
+    interval: 60
+    databases: [db1]
+    metrics: [transactions_grouped]
+    sql: SELECT object_type,tenant_id,count(*) AS transactions_grouped FROM %MAIN_SCHEMA_NAME%.ixf_transaction group by tenant_id,object_type
+  Transactions:
+    interval: 60
+    databases: [db1]
+    metrics: [transactions]
+    sql: SELECT count(*) AS transactions FROM %MAIN_SCHEMA_NAME%.ixf_transaction
+  Resolved Alerts:
+    interval: 60
+    databases: [db1]
+    metrics: [resolved_alerts]
+    sql: SELECT resolution,tenant_id,count(*) AS resolved_alerts FROM %MAIN_SCHEMA_NAME%.ic_alerts group by tenant_id,resolution
+  alerts_total:
+    interval: 60
+    databases: [db1]
+    metrics: [alerts_total]
+    sql: SELECT count(*) AS alerts_total FROM %MAIN_SCHEMA_NAME%.ic_alerts  
+
+

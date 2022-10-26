@@ -47,16 +47,16 @@
     dest: /var/lib/grafana/plugins/
     remote_src: yes
 
-#- name: add prometheus datasource
-#  grafana_datasource:
-#    name: "prometheus-local"
-#    grafana_url: "http://127.0.0.1:3000"
-#    grafana_user: "{{ grafana_admin_user }}"
-#    grafana_password: "{{ grafana_admin_password }}"
-#    org_id: "1"
-#    ds_type: "prometheus"
-#    ds_url: "http://127.0.0.1:9090"
-#  changed_when: false
+- name: add prometheus datasource
+  grafana_datasource:
+    name: "prometheus-local"
+    grafana_url: "http://127.0.0.1:3000"
+    grafana_user: "{{ grafana_admin_user }}"
+    grafana_password: "{{ grafana_admin_password }}"
+    org_id: "1"
+    ds_type: "prometheus"
+    ds_url: "http://127.0.0.1:9090"
+  changed_when: false
 
 - name: restart_grafana
   systemd:
