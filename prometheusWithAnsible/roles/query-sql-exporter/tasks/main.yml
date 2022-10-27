@@ -24,10 +24,10 @@
     state: present
 
 - name: install postgresql from nexus
-  shell: "yum install http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-9.2.24-4.el7_8.x86_64.rpm --skip-broken -y"
+  shell: "yum install https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-9.2.24-1.el7_5.x86_64.rpm --skip-broken -y"
 
 - name: install postgresql-devel from nexus
-  shell: "yum install http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-devel-9.2.24-4.el7_8.x86_64.rpm --skip-broken -y"
+  shell: "yum install https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-devel-9.2.24-1.el7_5.x86_64.rpm --skip-broken -y"
 
 #######################################################################################################################
 
