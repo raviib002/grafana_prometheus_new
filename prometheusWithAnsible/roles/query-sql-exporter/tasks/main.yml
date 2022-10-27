@@ -1,55 +1,48 @@
 - name: Downloading epel-release repo dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
-  shell: "wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
-
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+  
 - name: Installing epel-release repo dependency
   shell: "yum install epel-release-latest-7.noarch.rpm -y"
 
 - name: Downloading python3-3.6.8-18.el7.x86_64.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
-  shell: "wget http://mirror.centos.org/centos/7/updates/x86_64/Packages/python3-3.6.8-18.el7.x86_64.rpm"
-
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+  
 - name: Installing python3-3.6.8-18.el7.x86_64.rpm dependency
   shell: "yum install python3-3.6.8-18.el7.x86_64.rpm --skip-broken -y"
    
-#- name: Downloading python3-pip-9.0.3-8.el7.noarch.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
-#  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/python3-pip-9.0.3-8.el7.noarch.rpm"
+- name: Downloading python3-pip-9.0.3-8.el7.noarch.rpm dependency RPM file from Nexus
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
 
 - name: Installing python3-pip dependency
   shell: "yum install python3-pip -y"
 
 - name: Downloading libaio-0.3.109-13.el7.x86_64.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
-  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/libaio-0.3.109-13.el7.x86_64.rpm"
-
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+  
 - name: Installing libaio-0.3.109-13.el7.x86_64.rpm dependency
   shell: "yum install libaio-0.3.109-13.el7.x86_64.rpm -y"
 
-#- name: Downloading oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm"
+- name: Downloading oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm dependency RPM file from Nexus
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm"
   
 - name: Installing oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm dependency
   shell: "yum install oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm -y"
 
 - name: Downloading postgresql-libs-9.2.24-1.el7_5.x86_64.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-libs-9.2.24-1.el7_5.x86_64.rpm"
-  shell: "wget  	http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-libs-9.2.24-4.el7_8.x86_64.rpm"
-
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-libs-9.2.24-1.el7_5.x86_64.rpm"
+  
 - name: Installing postgresql-libs-9.2.24-1.el7_5.x86_64.rpm dependency
   shell: "yum install postgresql-libs-9.2.24-4.el7_8.x86_64.rpm -y"
 
 - name: Downloading postgresql-9.2.24-1.el7_5.x86_64.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-9.2.24-1.el7_5.x86_64.rpm"
-  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-9.2.24-4.el7_8.x86_64.rpm"
-
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-9.2.24-1.el7_5.x86_64.rpm"
+  
 - name: Installing postgresql-9.2.24-1.el7_5.x86_64.rpm dependency
   shell: "yum install postgresql-9.2.24-4.el7_8.x86_64.rpm --skip-broken -y"
 
 - name: Downloading postgresql-devel-9.2.24-1.el7_5.x86_64.rpm dependency RPM file from Nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-devel-9.2.24-1.el7_5.x86_64.rpm"
-  shell: "wget http://mirror.centos.org/centos/7/os/x86_64/Packages/postgresql-devel-9.2.24-4.el7_8.x86_64.rpm"
-
+  shell: "wget https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-devel-9.2.24-1.el7_5.x86_64.rpm"
+  
 - name: Installing postgresql-devel-9.2.24-1.el7_5.x86_64.rpm dependency
   shell: "yum install postgresql-devel-9.2.24-4.el7_8.x86_64.rpm --skip-broken -y"
 
@@ -60,13 +53,12 @@
 
 ########################################################################################################################
 
-#- name: Downloading query exporter .pex file from nexus
-  #shell: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/query-exporter/query-exporter-2.6.2.pex"
+- name: Downloading query exporter .pex file from nexus
+  shell: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/query-exporter/query-exporter-2.6.2.pex"
 
 - name: Installing Query exporter .pex file into bin directory
-  #shell: "install -m 0755 query-exporter-*.pex /bin/query-exporter"
-  shell: "install -m 0755 /var/query-exporter-*.pex /bin/query-exporter"
-
+  shell: "install -m 0755 query-exporter-*.pex /bin/query-exporter"
+  
 ########################################################################################################################
 
 - name: Creating sqlexporter config directory under data directory
