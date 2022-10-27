@@ -1,10 +1,9 @@
 ---
 # tasks file for roles/grafana
-- name: Downloading Grafana RPM file from Nexus
-  shell: "wget https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ version }}.x86_64.rpm"
-
-- name: Installing Grafana
-  shell: "yum install grafana-{{ version }}.x86_64.rpm -y"
+- name: install grafana-{{ version }} from nexus
+  yum:
+    name: https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ version }}.x86_64.rpm
+    state: present
 
 - name: start service grafana-server
   systemd:
@@ -37,13 +36,13 @@
 
 - name: install grafana-piechart-panel plugin
   unarchive:
-    src: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-piechart-panel/grafana-piechart-panel-1.6.2.zip"
+    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-piechart-panel/grafana-piechart-panel-1.6.2.zip"
     dest: /var/lib/grafana/plugins/
     remote_src: yes
 
 - name: install camptocamp-prometheus-alertmanager-datasource plugin
   unarchive:
-    src: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-prometheus-alertmanager-datasource/grafana-prometheus-alertmanager-datasource-1.0.0.zip"
+    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-prometheus-alertmanager-datasource/grafana-prometheus-alertmanager-datasource-1.0.0.zip"
     dest: /var/lib/grafana/plugins/
     remote_src: yes
 
