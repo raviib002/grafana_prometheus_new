@@ -1,0 +1,13 @@
+#!/bin/bash
+DSN='oracle+cx_oracle://{{ MAIN_SCHEMA_NAME }}:{{ MAIN_SCHEMA_PASSWORD }}@{{ DB_SERVER }}:{{ DB_PORT }}/{{ DB_SID }}'
+DSN1='postgresql+psycopg2://{{ POSTGRESQL_USERNAME }}:{{ POSTGRESQL_PASSWORD }}@{{ DB_SERVER }}:{{ DB_PORT }}/{{ DB_SID }}?{{ MAIN_SCHEMA_NAME }}'
+
+sed -i "s/%MAIN_SCHEMA_NAME%/{{ MAIN_SCHEMA_NAME }}/g" /var/config.yaml
+if [ "{{ DB  }}" == "oracle" ]; then
+sed -i "s~%DSN%~"$DSN"~g" /var/config.yaml
+elif [ "{{ DB }}" == "postgresql" ]; then
+sed -i "s~%DSN%~"$DSN1"~g" /var/config.yaml
+else
+echo "ERROR: Unsupported DB type. Please set the DB variable to (oracle|postgresql)"
+exit 1
+fi

@@ -59,7 +59,7 @@
 
 - name: Copy config yml file updater shell script into var directory
   template:
-    src: update_config_yml.sh
+    src: config_yml_updater.j2
     dest: /var/update_config_yml.sh
 
 - name: executing the config yaml updater shell script
@@ -93,7 +93,7 @@
     status_code: 200
   register: __result
   until: __result.status == 200
-  retries: 120
+  retries: 20
   delay: 1
 
 - name: Delete config yaml file from var folder
