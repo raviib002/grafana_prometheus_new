@@ -78,6 +78,16 @@
     src: sqlexporter.service
     dest: /etc/systemd/system/sqlexporter.service
 
+- name: Delete config yaml file from var folder
+  file:
+    path: '/var/config.yaml'
+    state: absent
+
+- name: Delete config yaml file updater shell script from var folder
+  file:
+    path: '/var/update_config_yml.sh'
+    state: absent
+
 - name: start service grafana-server
   systemd:
     name: grafana-server
@@ -95,13 +105,3 @@
   until: __result.status == 200
   retries: 20
   delay: 1
-
-- name: Delete config yaml file from var folder
-  file:
-    path: '/var/config.yaml'
-    state: absent
-
-- name: Delete config yaml file updater shell script from var folder
-  file:
-    path: '/var/update_config_yml.sh'
-    state: absent
