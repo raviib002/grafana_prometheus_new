@@ -1,4 +1,4 @@
-     databases:
+databases:
   db1:
     dsn: '%DSN%'
 metrics:
