@@ -1,25 +1,33 @@
-#- name: Add nexus repositories
-#  yum_repository:
-#    name: nexus
-#    description: Nexus repo
-#    file: nexus_repo
-#    baseurl: https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/
-#    gpgcheck: 0
+- name: install python36 from local
+  yum:
+    name: python36
+    state: present
 
-- name: install python36, python3-pip, libaio, oracleclient, postgresql-libs from local and nexus
-  yum: pkg={{ item }} state=present
-  with_items:
-    - python36
-    - python3-pip
-    - {{ libaio_dep_url }}
-    - {{ oracleclient_url }}
-    - {{ postgresql_libs_url }}
+- name: install python3-pip from local
+  yum:
+    name: python3-pip
+    state: present
 
-- name: install python36, python3-pip, libaio, oracleclient, postgresql-libs from local and nexus
-  yum: pkg={{ item }} state=present skip_broken=yes
-  with_items:
-    - {{ postgresql_url }}
-    - {{ postgresql_devel_url }}
+- name: install libaio from nexus
+  yum:
+    name: https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm
+    state: present
+
+- name: install oracle client from nexus
+  yum:
+    name: https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm
+    state: present
+
+- name: install postgresql-libs from nexus
+  yum:
+    name: https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-libs-9.2.24-1.el7_5.x86_64.rpm
+    state: present
+
+- name: install postgresql from nexus
+  shell: "yum install https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-9.2.24-1.el7_5.x86_64.rpm --skip-broken -y"
+
+- name: install postgresql-devel from nexus
+  shell: "yum install https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-devel-9.2.24-1.el7_5.x86_64.rpm --skip-broken -y"
 
 #######################################################################################################################
 
@@ -29,7 +37,7 @@
 ########################################################################################################################
 
 - name: Downloading query exporter .pex file from nexus
-  shell: "wget {{ queryexporter_pex_url }}"
+  shell: "wget https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/query-exporter/query-exporter-2.6.2.pex"
 
 - name: Installing Query exporter .pex file into bin directory
   shell: "install -m 0755 query-exporter-*.pex /bin/query-exporter"

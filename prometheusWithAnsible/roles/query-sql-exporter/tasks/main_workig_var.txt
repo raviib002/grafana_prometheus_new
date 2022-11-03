@@ -1,11 +1,3 @@
-#- name: Add nexus repositories
-#  yum_repository:
-#    name: nexus
-#    description: Nexus repo
-#    file: nexus_repo
-#    baseurl: https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/
-#    gpgcheck: 0
-
 - name: install python36, python3-pip, libaio, oracleclient, postgresql-libs from local and nexus
   yum: pkg={{ item }} state=present
   with_items:
@@ -15,11 +7,11 @@
     - {{ oracleclient_url }}
     - {{ postgresql_libs_url }}
 
-- name: install python36, python3-pip, libaio, oracleclient, postgresql-libs from local and nexus
-  yum: pkg={{ item }} state=present skip_broken=yes
-  with_items:
-    - {{ postgresql_url }}
-    - {{ postgresql_devel_url }}
+- name: install postgresql from nexus
+  shell: "yum install {{ postgresql_url }} --skip-broken -y"
+
+- name: install postgresql-devel from nexus
+  shell: "yum install {{ postgresql_devel_url }} --skip-broken -y"
 
 #######################################################################################################################
 
