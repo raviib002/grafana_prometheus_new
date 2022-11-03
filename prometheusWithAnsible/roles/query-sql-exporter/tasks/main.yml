@@ -1,25 +1,13 @@
-#- name: Add nexus repositories
-#  yum_repository:
-#    name: nexus
-#    description: Nexus repo
-#    file: nexus_repo
-#    baseurl: https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/
-#    gpgcheck: 0
-
-- name: install python36, python3-pip, libaio, oracleclient, postgresql-libs from local and nexus
+- name: install python36, python3-pip, libaio, oracleclient, postgresql-libs, postgresql, postgresql-devel from local and nexus
   yum: pkg={{ item }} state=present
   with_items:
     - python36
     - python3-pip
-    - {{ libaio_dep_url }}
-    - {{ oracleclient_url }}
-    - {{ postgresql_libs_url }}
-
-- name: install python36, python3-pip, libaio, oracleclient, postgresql-libs from local and nexus
-  yum: pkg={{ item }} state=present skip_broken=yes
-  with_items:
-    - {{ postgresql_url }}
-    - {{ postgresql_devel_url }}
+    - "{{ libaio_dep_url }}"
+    - "{{ oracleclient_url }}"
+    - "{{ postgresql_libs_url }}"
+    - "{{ postgresql_url }}"
+    - "{{ postgresql_devel_url }}"
 
 #######################################################################################################################
 
@@ -80,9 +68,9 @@
     path: '/var/update_config_yml.sh'
     state: absent
 
-- name: start service grafana-server
+- name: start service sqlexporter
   systemd:
-    name: grafana-server
+    name: sqlexporter
     state: started
     enabled: yes
 

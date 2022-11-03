@@ -88,9 +88,9 @@
     path: '/var/update_config_yml.sh'
     state: absent
 
-- name: start service grafana-server
+- name: start service sqlexporter
   systemd:
-    name: grafana-server
+    name: sqlexporter
     state: started
     enabled: yes
 

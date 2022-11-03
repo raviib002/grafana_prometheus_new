@@ -3,9 +3,9 @@
   with_items:
     - python36
     - python3-pip
-    - {{ libaio_dep_url }}
-    - {{ oracleclient_url }}
-    - {{ postgresql_libs_url }}
+    - "{{ libaio_dep_url }}"
+    - "{{ oracleclient_url }}"
+    - "{{ postgresql_libs_url }}"
 
 - name: install postgresql from nexus
   shell: "yum install {{ postgresql_url }} --skip-broken -y"
@@ -72,9 +72,9 @@
     path: '/var/update_config_yml.sh'
     state: absent
 
-- name: start service grafana-server
+- name: start service sqlexporter
   systemd:
-    name: grafana-server
+    name: sqlexporter
     state: started
     enabled: yes
 
