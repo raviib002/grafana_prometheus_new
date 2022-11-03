@@ -8,6 +8,7 @@ DB_PORT: "1521"
 DB_SID: "orcl"
 DB: "oracle"
 
+nexus_base_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/"
 libaio_dep_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
 oracleclient_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm"
 postgresql_libs_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-libs-9.2.24-1.el7_5.x86_64.rpm"
