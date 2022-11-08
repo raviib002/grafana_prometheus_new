@@ -4,7 +4,15 @@
 grafana_admin_password: "mypassword"
 grafana_admin_user: "admin"
 
-grafana_url: "http://127.0.0.1:3000"
+localhost: "127.0.0.1"
+grafana_url: "127.0.0.1"
+grafana_port: "3000"
 grafana_admin_user: "admin"
 grafana_admin_password: "mypassword"
 org_id: "1"
+
+serviceName: "grafana-server"
+grafana_etc: "/etc/grafana"
+grafana_plugins: "/var/lib/grafana/plugins"
+
+version: "8.3.3-1"

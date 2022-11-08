@@ -1,6 +1,2 @@
 ---
-serviceName: "alertmanager"
-userId: "alertmanager"
-groupId: "alertmanager"
-exec_command: /usr/local/bin/alertmanager --config.file /etc/alertmanager/alertmanager.yml --storage.path /var/lib/alertmanager/
-version: 0.24.0
+exec_command: "{{ usr_local_bin }}"/alertmanager --config.file "{{ alertmanager_etc }}"/alertmanager.yml --storage.path "{{ var_lib_alertmanager }}"

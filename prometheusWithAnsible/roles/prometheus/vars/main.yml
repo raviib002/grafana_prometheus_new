@@ -1,8 +1,4 @@
 ---
-serviceName: "prometheus"
-userId: "prometheus"
-groupId: "prometheus"
-exec_command: "/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.conf --storage.tsdb.path=/data/prometheus"
-version: "2.37.0"
+exec_command: "{{ usr_local_bin }}/prometheus --config.file={{ prometheus_etc }}/prometheus.conf --storage.tsdb.path={{ prometheus_data }}"
 serverhostname1: "localhost"
 serverhostname2: "localhost1"

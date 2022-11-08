@@ -7,13 +7,13 @@
 
 - name: start service grafana-server
   systemd:
-    name: grafana-server
+    name: "{{ serviceName }}"
     state: started
     enabled: yes
 
 - name: wait for service up
   uri:
-    url: "http://127.0.0.1:3000"
+    url: "http://{{ localhost }}:{{ grafana_port }}"
     status_code: 200
   register: __result
   until: __result.status == 200
@@ -27,7 +27,7 @@
 
 - name: change admin user
   lineinfile:
-    path: /etc/grafana/grafana.ini
+    path: "{{ grafana_etc }}"/grafana.ini
     regexp: "{{ item.before }}"
     line: "{{ item.after }}"
   with_items:
@@ -36,30 +36,30 @@
 
 - name: install grafana-piechart-panel plugin
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-piechart-panel/grafana-piechart-panel-1.6.2.zip"
-    dest: /var/lib/grafana/plugins/
+    src: "{{ grafana-piechart-panel }}"
+    dest: "{{ grafana_plugins }}/"
     remote_src: yes
 
 - name: install camptocamp-prometheus-alertmanager-datasource plugin
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-prometheus-alertmanager-datasource/grafana-prometheus-alertmanager-datasource-1.0.0.zip"
-    dest: /var/lib/grafana/plugins/
+    src: "{{ prometheus-alertmanager-datasource }}"
+    dest: "{{ grafana_plugins }}/"
     remote_src: yes
 
 - name: add prometheus datasource
   grafana_datasource:
     name: "prometheus-local"
-    grafana_url: "http://127.0.0.1:3000"
+    grafana_url: "http://{{ grafana_url }}:{{ grafana_port}}"
     grafana_user: "{{ grafana_admin_user }}"
     grafana_password: "{{ grafana_admin_password }}"
     org_id: "1"
     ds_type: "prometheus"
-    ds_url: "http://127.0.0.1:9090"
+    ds_url: "http://{{ prometheus_url }}:{{ prometheus_port }}"
   changed_when: false
 
 - name: restart_grafana
   systemd:
-    name: grafana-server
+    name: "{{ serviceName }}"
     state: restarted
     enabled: yes
     daemon_reload: yes

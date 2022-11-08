@@ -1,0 +1,15 @@
+---
+# defaults file for roles/grafana
+
+serviceName: "alertmanager"
+userId: "alertmanager"
+groupId: "alertmanager"
+version: 0.24.0
+localhost: "localhost"
+alertmanager_port: "9093"
+
+usr_local_bin: "/usr/local/bin"
+alertmanager_etc: "/etc/alertmanager"
+var_lib_alertmanager: "/var/lib/alertmanager"
+etc_systemd: "/etc/systemd/system"
+etc_atmool: "/etc/amtool"

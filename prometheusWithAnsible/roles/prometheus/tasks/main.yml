@@ -14,15 +14,14 @@
 
 - name: Install prometheus
   unarchive:
-    #src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/prometheus/prometheus-{{version}}.linux-amd64.tar.gz"
-    src: "https://github.com/prometheus/prometheus/releases/download/v{{version}}/prometheus-{{version}}.linux-amd64.tar.gz"
+    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/prometheus/prometheus-{{ version }}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: yes
 
 - name: Copy prometheus file to bind
   copy:
-    src: "/tmp/prometheus-{{version}}.linux-amd64/prometheus"
-    dest: "/usr/local/bin/prometheus"
+    src: "/tmp/prometheus-{{ version }}.linux-amd64/prometheus"
+    dest: "{{ usr_local_bin }}/prometheus"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -30,45 +29,41 @@
 
 - name: Delete prometheus tmp folder
   file:
-    path: '/tmp/prometheus-{{version}}.linux-amd64'
+    path: '/tmp/prometheus-{{ version }}.linux-amd64'
     state: absent
 
 - name: Creates directory
   file: 
-    path: "/data/prometheus/"
+    path: "{{ item }}"
     state: directory
     owner: "{{userId}}"
     group: "{{groupId}}"
     mode: 0755
-
-- name: Creates directory
-  file: 
-    path: "/etc/prometheus/"
-    state: directory
-    owner: "{{userId}}"
-    group: "{{groupId}}"
-    mode: 0755
+  with_items:
+    - "{{ prometheus_data }}"
+    - "{{ prometheus_etc }}"
 
 - name: config file
   template:
     src: prometheus.conf.j2
-    dest: /etc/prometheus/prometheus.conf
+    dest: "{{ prometheus_etc }}"/prometheus.conf
+  notify: event_restart_prometheus
 
 - name: Copy systemd init file
   template:
     src: init.service.j2
-    dest: /etc/systemd/system/prometheus.service
+    dest: "{{ system_service }}"/prometheus.service
   notify: systemd_reload
 
 - name: Start prometheus service
   service:
-    name: prometheus
+    name: "{{ serviceName }}"
     state: started
     enabled: yes
 
 - name: Check if prometheus is accessible
   uri:
-    url: http://localhost:9090
+    url: http://"{{ localhost }}":"{{ prometheus_port }}"
     method: GET
     status_code: 200
 ################# Note : this service will not run if /etc/prometheus/prometheus.conf file is having any mis alignment under target secion ################

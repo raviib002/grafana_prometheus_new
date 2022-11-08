@@ -14,15 +14,18 @@
 
 - name: Creates alertmanager directory under etc directory
   file:
-    path: /etc/alertmanager
+    path: "{{ item }}"
     state: directory
     owner: "{{userId}}"
     group: "{{groupId}}"
     mode: 0755
+  with_items:
+    - "{{ alertmanager_etc }}"
+    - "{{ var_lib_alertmanager }}"
+    - "{{ etc_atmool }}"
 
 - name: Install prometheus alertmanager
   unarchive:
-#    src: "https://github.com/prometheus/alertmanager/releases/download/v{{ version }}/alertmanager-{{ version }}.linux-amd64.tar.gz"
     src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/alertmanager/alertmanager-{{ version }}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: yes
@@ -30,7 +33,7 @@
 - name: Copy prometheus alertmanager file to bin
   copy:
     src: "/tmp/alertmanager-{{ version }}.linux-amd64/alertmanager"
-    dest: "/usr/local/bin/alertmanager"
+    dest: "{{ usr_local_bin }}/alertmanager"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -39,49 +42,33 @@
 - name: Copy prometheus alertmanager.yml file to etc alertmanager directory
   copy:
     src: "/tmp/alertmanager-{{ version }}.linux-amd64/alertmanager.yml"
-    dest: "/etc/alertmanager/alertmanager.yml"
+    dest: "{{ alertmanager_etc }}/alertmanager.yml"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
     mode: 0755
 
-- name: Creates alertmanager directory under var lib directory for data store 
-  file:
-    path: /var/lib/alertmanager
-    state: directory
-    owner: "{{userId}}"
-    group: "{{groupId}}"
-    mode: 0755
-
 - name: Copy systemd init file
   template:
     src: init.service.j2
-    dest: /etc/systemd/system/alertmanager.service
+    dest: "{{ etc_systemd }}"/alertmanager.service
 
 - name: Start alertmanager service
   service:
-    name: alertmanager
+    name: "{{ serviceName }}"
     state: started
     enabled: yes
 
 - name: Check if alertmanager emits metrices
   uri:
-    url: http://localhost:9093
+    url: http://"{{ localhost }}":"{{ alertmanager_port }}"
     method: GET
     status_code: 200
-
-- name: Creates alertmanager dependency amtool directory under etc directory 
-  file:
-    path: /etc/amtool
-    state: directory
-    owner: "{{userId}}"
-    group: "{{groupId}}"
-    mode: 0755
 
 - name: Copy alertmanager dependency amtool file to bin
   copy:
     src: "/tmp/alertmanager-{{ version }}.linux-amd64/amtool"
-    dest: "/usr/local/bin/amtool"
+    dest: "{{ usr_local_bin }}/amtool"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -89,21 +76,21 @@
 
 - name: Creating a atmool config file 
   copy:
-    dest: "/etc/amtool/config.yml"
+    dest: "{{ etc_atmool }}/config.yml"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
     mode: 0755
     content: |
-      alertmanager.url: http://localhost:9093
+      alertmanager.url: http://"{{ localhost }}":"{{ alertmanager_port }}"
 
 - name: insert alertmanager data into prometheus config file
   shell: |
-    echo "  " >> /etc/prometheus/prometheus.conf
-    echo "  - job_name: 'alertmanager'" >> /etc/prometheus/prometheus.conf
-    echo "    scrape_interval: 5s" >> /etc/prometheus/prometheus.conf
-    echo "    static_configs:" >> /etc/prometheus/prometheus.conf
-    echo "      - targets: ['localhost:9093']" >> /etc/prometheus/prometheus.conf
+    echo "  " >> "{{ alertmanager_etc }}"/prometheus.conf
+    echo "  - job_name: 'alertmanager'" >> "{{ alertmanager_etc }}"/prometheus.conf
+    echo "    scrape_interval: 5s" >> "{{ alertmanager_etc }}"/prometheus.conf
+    echo "    static_configs:" >> "{{ alertmanager_etc }}"/prometheus.conf
+    echo "      - targets: ['{{ localhost }}:{{ alertmanager_port }}']" >> "{{ alertmanager_etc }}"/prometheus.conf
 
 - name: Restart prometheus service
   service:

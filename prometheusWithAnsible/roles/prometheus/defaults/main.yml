@@ -1,0 +1,13 @@
+---
+# defaults file for roles/grafana
+
+usr_local_bin: "/usr/local/bin"
+system_service: "/etc/systemd/system"
+prometheus_data: "/data/prometheus"
+prometheus_etc: "/etc/prometheus"
+version: "2.37.0"
+localhost: "localhost"
+prometheus_port: "9090"
+serviceName: "prometheus"
+userId: "prometheus"
+groupId: "prometheus"
