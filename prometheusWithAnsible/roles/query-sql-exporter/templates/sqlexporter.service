@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Environment=LD_LIBRARY_PATH=/usr/lib/oracle/12.2/client64/lib
 Type=simple
-ExecStart=/bin/query-exporter /data/sqlexporter_config/config.yaml -H 0.0.0.0
+ExecStart=/bin/query-exporter {{ sqlexp_data }}/config.yaml -H 0.0.0.0
 User=root
 Group=root
 TimeoutStartSec=0

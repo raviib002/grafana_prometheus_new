@@ -26,7 +26,7 @@
 
 - name: Creating sqlexporter config directory under data directory
   file:
-    path: /data/sqlexporter_config
+    path: "{{ sqlexp_data }}"
     state: directory
     owner: "root"
     group: "root"
@@ -46,17 +46,17 @@
   shell: "sh /var/update_config_yml.sh"
 
 - name: copy config yaml file into data sqlexporter_config directory
-  shell: "cp -r /var/config.yaml /data/sqlexporter_config/"
+  shell: "cp -r /var/config.yaml {{ sqlexp_data }}/"
 
 - name: Copy oracle path shell script file into etc profile.d directory to set ld library path
   template:
     src: oracle_path.sh
-    dest: /etc/profile.d/oracle_path.sh
+    dest: "{{ sqlexp_etc_profile }}/oracle_path.sh"
   
 - name: Copy sqlexporter service file into systemd directory
   template:
     src: sqlexporter.service
-    dest: /etc/systemd/system/sqlexporter.service
+    dest: "{{ sqlexp_etc_systemd }}/sqlexporter.service"
 
 - name: Delete config yaml file from var folder
   file:
@@ -70,7 +70,7 @@
 
 - name: start service sqlexporter
   systemd:
-    name: sqlexporter
+    name: "{{ sqlexp_serviceName }}"
     state: started
     enabled: yes
 
@@ -79,7 +79,7 @@
 
 - name: wait for service up
   uri:
-    url: "http://127.0.0.1:9560/metrics"
+    url: "http://{{ localhost }}:{{ sqlexp }}/metrics"
     status_code: 200
   register: __result
   until: __result.status == 200

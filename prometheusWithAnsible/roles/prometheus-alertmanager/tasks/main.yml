@@ -26,14 +26,14 @@
 
 - name: Install prometheus alertmanager
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/alertmanager/alertmanager-{{ version }}.linux-amd64.tar.gz"
+    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/alertmanager/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: yes
 
 - name: Copy prometheus alertmanager file to bin
   copy:
-    src: "/tmp/alertmanager-{{ version }}.linux-amd64/alertmanager"
-    dest: "{{ usr_local_bin }}/alertmanager"
+    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager"
+    dest: "{{ alert_usr_local_bin }}/alertmanager"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -41,7 +41,7 @@
 
 - name: Copy prometheus alertmanager.yml file to etc alertmanager directory
   copy:
-    src: "/tmp/alertmanager-{{ version }}.linux-amd64/alertmanager.yml"
+    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager.yml"
     dest: "{{ alertmanager_etc }}/alertmanager.yml"
     owner: "{{userId}}"
     group: "{{groupId}}"
@@ -51,11 +51,11 @@
 - name: Copy systemd init file
   template:
     src: init.service.j2
-    dest: "{{ etc_systemd }}"/alertmanager.service
+    dest: "{{ alertmanager_etc_systemd }}"/alertmanager.service
 
 - name: Start alertmanager service
   service:
-    name: "{{ serviceName }}"
+    name: "{{ alertmanager_serviceName }}"
     state: started
     enabled: yes
 
@@ -67,8 +67,8 @@
 
 - name: Copy alertmanager dependency amtool file to bin
   copy:
-    src: "/tmp/alertmanager-{{ version }}.linux-amd64/amtool"
-    dest: "{{ usr_local_bin }}/amtool"
+    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/amtool"
+    dest: "{{ alert_usr_local_bin }}/amtool"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -94,11 +94,11 @@
 
 - name: Restart prometheus service
   service:
-    name: prometheus
+    name: "{{ prometheus_serviceName }}"
     state: restarted
     enabled: yes
 
 - name: Delete alertmanager tmp folder
   file:
-    path: '/tmp/alertmanager-{{ version }}.linux-amd64'
+    path: '/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64'
     state: absent

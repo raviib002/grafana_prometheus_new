@@ -1,2 +1,2 @@
 ---
-exec_command: "{{ usr_local_bin }}"/alertmanager --config.file "{{ alertmanager_etc }}"/alertmanager.yml --storage.path "{{ var_lib_alertmanager }}"
+exec_command: "{{ alert_usr_local_bin }}"/alertmanager --config.file "{{ alertmanager_etc }}"/alertmanager.yml --storage.path "{{ var_lib_alertmanager }}"

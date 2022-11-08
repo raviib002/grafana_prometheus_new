@@ -1,0 +1,9 @@
+---
+# defaults file for roles/grafana
+
+sqlexp_data: "/data/sqlexporter_config"
+sqlexp_etc_profile: "/etc/profile.d"
+sqlexp_etc_systemd: "/etc/systemd/system"
+sqlexp_serviceName: "sqlexporter"
+sqlexp_port: "9560"
+localhost: "127.0.0.1"

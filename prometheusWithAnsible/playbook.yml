@@ -5,11 +5,11 @@
   become_user: root
   become_method: sudo
   roles:
-#    - prometheus
+    - prometheus
 #    - prometheus-blackbox-exporter
 #    - prometheus-node-exporter
 #    - prometheus-alertmanager
-    - query-sql-exporter
+#    - query-sql-exporter
 
 #- hosts: node_exporter
 #- hosts: localhost

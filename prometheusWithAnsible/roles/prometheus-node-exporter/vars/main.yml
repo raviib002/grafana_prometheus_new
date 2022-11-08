@@ -1,6 +1,2 @@
 ---
-serviceName: "node_exporter"
-userId: "node_exporter"
-groupId: "node_exporter"
-exec_command: /usr/local/bin/node_exporter
-version: 1.2.0
+exec_command: "{{ nodeexp_usr_local_bin }}"/node_exporter

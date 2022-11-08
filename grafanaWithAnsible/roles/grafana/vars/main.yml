@@ -4,4 +4,3 @@ grafana_piechart_panel: "https://nexus.cfrm.dev.local/repository/devops-artifact
 prometheus_alertmanager_datasource: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-prometheus-alertmanager-datasource/grafana-prometheus-alertmanager-datasource-1.0.0.zip"
 prometheus_url: "127.0.0.1"
 prometheus_port: "9090"
-

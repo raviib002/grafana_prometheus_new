@@ -1,15 +1,16 @@
 ---
 # defaults file for roles/grafana
 
-serviceName: "alertmanager"
+alertmanager_serviceName: "alertmanager"
+prometheus_serviceName: "prometheus"
 userId: "alertmanager"
 groupId: "alertmanager"
-version: 0.24.0
+alertmanager_version: "0.24.0"
 localhost: "localhost"
 alertmanager_port: "9093"
 
-usr_local_bin: "/usr/local/bin"
+alert_usr_local_bin: "/usr/local/bin"
 alertmanager_etc: "/etc/alertmanager"
 var_lib_alertmanager: "/var/lib/alertmanager"
-etc_systemd: "/etc/systemd/system"
+alertmanager_etc_systemd: "/etc/systemd/system"
 etc_atmool: "/etc/amtool"

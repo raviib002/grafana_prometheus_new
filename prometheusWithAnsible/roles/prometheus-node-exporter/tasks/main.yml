@@ -14,15 +14,14 @@
 
 - name: Install prometheus node exporter
   unarchive:
-    #src: "https://github.com/prometheus/node_exporter/releases/download/v{{ version }}/node_exporter-{{ version }}.linux-amd64.tar.gz"
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/node-exporter/node_exporter-{{ version }}.linux-amd64.tar.gz"
+    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/node-exporter/node_exporter-{{ nodeexp_version }}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: yes
 
 - name: Copy prometheus node exporter file to bin
   copy:
-    src: "/tmp/node_exporter-{{ version }}.linux-amd64/node_exporter"
-    dest: "/usr/local/bin/node_exporter"
+    src: "/tmp/node_exporter-{{ nodeexp_version }}.linux-amd64/node_exporter"
+    dest: "{{ nodeexp_usr_local_bin }}/node_exporter"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -30,28 +29,28 @@
 
 - name: Delete node exporter tmp folder
   file:
-    path: '/tmp/node_exporter-{{ version }}.linux-amd64'
+    path: '/tmp/node_exporter-{{ nodeexp_version }}.linux-amd64'
     state: absent
 
 - name: Copy systemd init file
   template:
     src: init.service.j2
-    dest: /etc/systemd/system/node_exporter.service
+    dest: "{{ nodeexp_etc_systemd }}/node_exporter.service"
 
 - name: Start node_exporter service
   service:
-    name: node_exporter
+    name: "{{ nodeexp_serviceName }}"
     state: started
     enabled: yes
 
 - name: Check if node exporter emits metrices
   uri:
-    url: http://localhost:9100/metrics
+    url: http://{{ localhost }}:{{ nodeexp_port }}/metrics
     method: GET
     status_code: 200
 
 - name: Restart prometheus service
   service:
-    name: prometheus
+    name: "{{ prometheus_serviceName }}"
     state: restarted
     enabled: yes

@@ -14,14 +14,14 @@
 
 - name: Install prometheus
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/prometheus/prometheus-{{ version }}.linux-amd64.tar.gz"
+    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/prometheus/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: yes
 
 - name: Copy prometheus file to bind
   copy:
-    src: "/tmp/prometheus-{{ version }}.linux-amd64/prometheus"
-    dest: "{{ usr_local_bin }}/prometheus"
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+    dest: "{{ pro_usr_local_bin }}/prometheus"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
@@ -29,7 +29,7 @@
 
 - name: Delete prometheus tmp folder
   file:
-    path: '/tmp/prometheus-{{ version }}.linux-amd64'
+    path: '/tmp/prometheus-{{ prometheus_version }}.linux-amd64'
     state: absent
 
 - name: Creates directory
@@ -46,18 +46,18 @@
 - name: config file
   template:
     src: prometheus.conf.j2
-    dest: "{{ prometheus_etc }}"/prometheus.conf
+    dest: "{{ prometheus_etc }}/prometheus.conf"
   notify: event_restart_prometheus
 
 - name: Copy systemd init file
   template:
     src: init.service.j2
-    dest: "{{ system_service }}"/prometheus.service
+    dest: "{{ pro_systemd_service }}/prometheus.service"
   notify: systemd_reload
 
 - name: Start prometheus service
   service:
-    name: "{{ serviceName }}"
+    name: "{{ prometheus_serviceName }}"
     state: started
     enabled: yes
 

@@ -1,0 +1,14 @@
+---
+# defaults file for roles/grafana
+
+blackbox_serviceName: "blackbox_exporter"
+userId: "blackbox_exporter"
+groupId: "blackbox_exporter"
+blackbox_version: "0.22.0"
+prometheus_serviceName: "prometheus"
+
+blackbox_usr_local_bin: "/usr/local/bin"
+blackbox_data: "/data/blackbox_exporter"
+blackbox_etc_systemd: "/etc/systemd/system"
+localhost: "localhost"
+blackbox_port: "9115"

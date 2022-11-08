@@ -1,13 +1,13 @@
 ---
 # tasks file for roles/grafana
-- name: install grafana-{{ version }} from nexus
+- name: install grafana-{{ grafan_version }} from nexus
   yum:
-    name: https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ version }}.x86_64.rpm
+    name: https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ grafan_version }}.x86_64.rpm
     state: present
 
 - name: start service grafana-server
   systemd:
-    name: "{{ serviceName }}"
+    name: "{{ grafana_serviceName }}"
     state: started
     enabled: yes
 
@@ -59,7 +59,7 @@
 
 - name: restart_grafana
   systemd:
-    name: "{{ serviceName }}"
+    name: "{{ grafana_serviceName }}"
     state: restarted
     enabled: yes
     daemon_reload: yes

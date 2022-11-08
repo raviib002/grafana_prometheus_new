@@ -1,0 +1,13 @@
+---
+# defaults file for roles/grafana
+
+nodeexp_serviceName: "node_exporter"
+prometheus_serviceName: "prometheus"
+userId: "node_exporter"
+groupId: "node_exporter"
+nodeexp_version: "1.2.0"
+nodeexp_port: "9100"
+localhost: "localhost"
+
+nodeexp_usr_local_bin: "/usr/local/bin"
+nodeexp_etc_systemd: "/etc/systemd/system"

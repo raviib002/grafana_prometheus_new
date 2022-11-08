@@ -1,4 +1,4 @@
 ---
-exec_command: "{{ usr_local_bin }}/prometheus --config.file={{ prometheus_etc }}/prometheus.conf --storage.tsdb.path={{ prometheus_data }}"
+exec_command: "{{ pro_usr_local_bin }}/prometheus --config.file={{ prometheus_etc }}/prometheus.conf --storage.tsdb.path={{ prometheus_data }}"
 serverhostname1: "localhost"
 serverhostname2: "localhost1"
