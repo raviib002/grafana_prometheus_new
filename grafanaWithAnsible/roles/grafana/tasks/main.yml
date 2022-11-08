@@ -27,7 +27,7 @@
 
 - name: change admin user
   lineinfile:
-    path: "{{ grafana_etc }}"/grafana.ini
+    path: "{{ grafana_etc }}/grafana.ini"
     regexp: "{{ item.before }}"
     line: "{{ item.after }}"
   with_items:
@@ -36,14 +36,14 @@
 
 - name: install grafana-piechart-panel plugin
   unarchive:
-    src: "{{ grafana-piechart-panel }}"
-    dest: "{{ grafana_plugins }}/"
+    src: "{{ grafana_piechart_panel }}"
+    dest: "{{ grafana_plugins }}"
     remote_src: yes
 
 - name: install camptocamp-prometheus-alertmanager-datasource plugin
   unarchive:
-    src: "{{ prometheus-alertmanager-datasource }}"
-    dest: "{{ grafana_plugins }}/"
+    src: "{{ prometheus_alertmanager_datasource }}"
+    dest: "{{ grafana_plugins }}"
     remote_src: yes
 
 - name: add prometheus datasource
@@ -63,6 +63,3 @@
     state: restarted
     enabled: yes
     daemon_reload: yes
-
-- name: Removing Grafana RPM file which we downloaded from Nexus
-  shell: "rm -r grafana-{{ version }}.x86_64.rpm*"
