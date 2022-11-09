@@ -51,7 +51,7 @@
 - name: Copy systemd init file
   template:
     src: init.service.j2
-    dest: "{{ alertmanager_etc_systemd }}"/alertmanager.service
+    dest: "{{ alertmanager_etc_systemd }}/alertmanager.service"
 
 - name: Start alertmanager service
   service:
@@ -61,7 +61,7 @@
 
 - name: Check if alertmanager emits metrices
   uri:
-    url: http://"{{ localhost }}":"{{ alertmanager_port }}"
+    url: "http://{{ localhost }}:{{ alertmanager_port }}"
     method: GET
     status_code: 200
 
@@ -82,15 +82,15 @@
     remote_src: yes
     mode: 0755
     content: |
-      alertmanager.url: http://"{{ localhost }}":"{{ alertmanager_port }}"
+      alertmanager.url: "http://{{ localhost }}:{{ alertmanager_port }}"
 
 - name: insert alertmanager data into prometheus config file
   shell: |
-    echo "  " >> "{{ alertmanager_etc }}"/prometheus.conf
-    echo "  - job_name: 'alertmanager'" >> "{{ alertmanager_etc }}"/prometheus.conf
-    echo "    scrape_interval: 5s" >> "{{ alertmanager_etc }}"/prometheus.conf
-    echo "    static_configs:" >> "{{ alertmanager_etc }}"/prometheus.conf
-    echo "      - targets: ['{{ localhost }}:{{ alertmanager_port }}']" >> "{{ alertmanager_etc }}"/prometheus.conf
+    echo "  " >> {{ alertmanager_etc }}/prometheus.conf
+    echo "  - job_name: 'alertmanager'" >> {{ alertmanager_etc }}/prometheus.conf
+    echo "    scrape_interval: 5s" >> {{ alertmanager_etc }}/prometheus.conf
+    echo "    static_configs:" >> {{ alertmanager_etc }}/prometheus.conf
+    echo "      - targets: ['{{ localhost }}:{{ alertmanager_port }}']" >> {{ alertmanager_etc }}/prometheus.conf
 
 - name: Restart prometheus service
   service:

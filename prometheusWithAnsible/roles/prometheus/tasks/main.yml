@@ -63,7 +63,7 @@
 
 - name: Check if prometheus is accessible
   uri:
-    url: http://"{{ localhost }}":"{{ prometheus_port }}"
+    url: "http://{{ localhost }}:{{ prometheus_port }}"
     method: GET
     status_code: 200
 ################# Note : this service will not run if /etc/prometheus/prometheus.conf file is having any mis alignment under target secion ################

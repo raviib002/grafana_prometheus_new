@@ -45,7 +45,7 @@
 
 - name: Check if node exporter emits metrices
   uri:
-    url: http://{{ localhost }}:{{ nodeexp_port }}/metrics
+    url: "http://{{ localhost }}:{{ nodeexp_port }}/metrics"
     method: GET
     status_code: 200
 

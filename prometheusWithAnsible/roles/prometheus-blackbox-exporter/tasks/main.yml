@@ -61,7 +61,7 @@
 
 - name: Check if blackbox_exporter is accessible
   uri:
-    url: http://"{{ localhost }}":"{{ blackbox_port }}"
+    url: "http://{{ localhost }}:{{ blackbox_port }}"
     method: GET
     status_code: 200
 
