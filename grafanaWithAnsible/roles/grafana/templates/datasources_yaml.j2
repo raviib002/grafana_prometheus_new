@@ -1,0 +1,18 @@
+apiVersion: 1
+datasources:
+ - name: Prometheus
+   type: prometheus
+   orgId: 1
+   url: http://{{ prometheus_url }}:{{ prometheus_port }}
+   access: proxy
+   version: 1
+   editable: false
+   isDefault: true
+ - name: alertmanager
+   type: camptocamp-prometheus-alertmanager-datasource
+   access: proxy
+   orgId: 1
+   url: http://{{ alertmanager_url }}:{{ alertmanager_port }}
+   version: 1
+   editable: false
+   isDefault: false

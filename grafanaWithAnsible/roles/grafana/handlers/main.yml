@@ -7,3 +7,10 @@
     state: restarted
     enabled: yes
     daemon_reload: yes
+  listen: event_restart_grafana
+
+#- name: Restart the Grafana service
+#  service:
+#    name: grafana
+#    state: restarted
+#  listen: event_restart_grafana

@@ -1,9 +1,38 @@
 ---
 # tasks file for roles/grafana
+- name: Creating prometheus user group
+  group: name="{{groupId}}"
+  become: true
+
+- name: Creating prometheus user
+  user:
+    name: "{{userId}}"
+    group: "{{groupId}}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "{{userId}} nologin User"
+    createhome: "no"
+    state: present
+
 - name: install grafana-{{ grafan_version }} from nexus
   yum:
     name: https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ grafan_version }}.x86_64.rpm
     state: present
+
+- name: Creates grafana data directory
+  file: 
+    path: "{{ item }}"
+    state: directory
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: 0755
+  with_items:
+    - "{{ grafana_data }}"
+    - "{{ grafana_data1 }}"
+    - "{{ grafana_logs }}"
+    - "{{ grafana_provisioning }}"
+    - "{{ grafana_provisioning_dashboard }}"
+    - "{{ grafana_provisioning_datasources }}"
 
 - name: start service grafana-server
   systemd:
@@ -25,14 +54,32 @@
   register: __command_admin
   changed_when: __command_admin.rc !=0
 
-- name: change admin user
-  lineinfile:
-    path: "{{ grafana_etc }}/grafana.ini"
-    regexp: "{{ item.before }}"
-    line: "{{ item.after }}"
-  with_items:
-  - { before: "^;admin_user = admin", after: "admin_user = {{ grafana_admin_user }}"}
-  - { before: "^;admin_password = admin", after: "admin_password = {{ grafana_admin_password }}"}
+#- name: change admin user
+#  lineinfile:
+#    path: "{{ grafana_etc }}/grafana.ini"
+#    regexp: "{{ item.before }}"
+#    line: "{{ item.after }}"
+#  with_items:
+#  - { before: "^;admin_user = admin", after: "admin_user = {{ grafana_admin_user }}"}
+#  - { before: "^;admin_password = admin", after: "admin_password = {{ grafana_admin_password }}"}
+
+- name: grafana config file
+  template:
+    src: grafana_ini.j2
+    dest: "{{ grafana_etc }}/grafana.ini"
+  notify: event_restart_grafana
+
+- name: grafana dashboard file
+  template:
+    src: dashboards_yaml.j2
+    dest: "{{ grafana_provisioning_dashboard }}/dashboards.yaml"
+  notify: event_restart_grafana
+
+- name: grafana dashsources file
+  template:
+    src: datasources_yaml.j2
+    dest: "{{ grafana_provisioning_datasources }}/datasources.yaml"
+  notify: event_restart_grafana
 
 - name: install grafana-piechart-panel plugin
   unarchive:
