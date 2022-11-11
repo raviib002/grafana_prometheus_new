@@ -23,6 +23,8 @@
     - "{{ alertmanager_etc }}"
     - "{{ var_lib_alertmanager }}"
     - "{{ etc_atmool }}"
+    - "{{ alert_storage_path }}"
+    - "{{ alert_template_path }}"
 
 - name: Install prometheus alertmanager
   unarchive:
@@ -39,19 +41,33 @@
     remote_src: yes
     mode: 0755
 
-- name: Copy prometheus alertmanager.yml file to etc alertmanager directory
-  copy:
-    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager.yml"
-    dest: "{{ alertmanager_etc }}/alertmanager.yml"
+#- name: Copy prometheus alertmanager.yml file to etc alertmanager directory
+#  copy:
+#    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager.yml"
+#    dest: "{{ alertmanager_etc }}/alertmanager.yml"
+#    owner: "{{userId}}"
+#    group: "{{groupId}}"
+#    remote_src: yes
+#    mode: 0755
+
+#- name: Copy systemd init file
+#  template:
+#    src: init.service.j2
+#    dest: "{{ alertmanager_etc_systemd }}/alertmanager.service"
+
+- name: "Copy bin executable files to usr local bin directory"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
     mode: 0755
-
-- name: Copy systemd init file
-  template:
-    src: init.service.j2
-    dest: "{{ alertmanager_etc_systemd }}/alertmanager.service"
+  loop:
+    - { src: 'alertmanager.yml.j2', dest: '{{ alertmanager_etc }}/alertmanager.yml' }
+    - { src: 'cfrm.tmpl.j2', dest: '{{ alert_template_path }}/cfrm.tmpl' }
+    - { src: 'email.html', dest: '{{ alert_template_path }}/email.html' }
+    - { src: 'alertmanager.service.j2', dest: '{{ alertmanager_etc_systemd }}/alertmanager.service' }
 
 - name: Start alertmanager service
   service:
@@ -84,13 +100,13 @@
     content: |
       alertmanager.url: "http://{{ localhost }}:{{ alertmanager_port }}"
 
-- name: insert alertmanager data into prometheus config file
-  shell: |
-    echo "  " >> {{ alertmanager_etc }}/prometheus.conf
-    echo "  - job_name: 'alertmanager'" >> {{ alertmanager_etc }}/prometheus.conf
-    echo "    scrape_interval: 5s" >> {{ alertmanager_etc }}/prometheus.conf
-    echo "    static_configs:" >> {{ alertmanager_etc }}/prometheus.conf
-    echo "      - targets: ['{{ localhost }}:{{ alertmanager_port }}']" >> {{ alertmanager_etc }}/prometheus.conf
+#- name: insert alertmanager data into prometheus config file
+#  shell: |
+#    echo "  " >> {{ alertmanager_etc }}/prometheus.conf
+#    echo "  - job_name: 'alertmanager'" >> {{ alertmanager_etc }}/prometheus.conf
+#    echo "    scrape_interval: 5s" >> {{ alertmanager_etc }}/prometheus.conf
+#    echo "    static_configs:" >> {{ alertmanager_etc }}/prometheus.conf
+#    echo "      - targets: ['{{ localhost }}:{{ alertmanager_port }}']" >> {{ alertmanager_etc }}/prometheus.conf
 
 - name: Restart prometheus service
   service:

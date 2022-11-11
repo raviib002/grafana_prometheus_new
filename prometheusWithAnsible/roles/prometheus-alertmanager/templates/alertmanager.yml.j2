@@ -1,0 +1,50 @@
+global:
+  smtp_smarthost: '{{ SMTP_SMARTHOST }}'
+  smtp_from: 'alertmanager@prometheus.com'
+  smtp_auth_username: ''
+  smtp_auth_password: ''
+  smtp_require_tls: false
+
+templates:
+- '{{ ALERTMANAGER_TEMPLATES }}'
+
+route:
+  #group_by: ['instance']
+  repeat_interval: '24h'
+  group_wait: '30s'
+  receiver: 'operations-team'
+
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  # Apply inhibition if the alertname is the same.
+  equal: ['alertname', 'instance']
+
+receivers:
+- name: 'operations-team'
+  email_configs:
+  - to: '{{ EMAIL_ALERTS_RECEIVER }}'
+    send_resolved: true
+  slack_configs:
+  - send_resolved: true
+    api_url: '{{ SLACK_API_URL }}'
+    channel: '#monitoring'
+    username: '{{ template "slack.default.username" . }}'
+    color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+    title: '{{ template "slack.default.title" . }}'
+    title_link: '{{ template "slack.default.titlelink" . }}'
+    pretext: '{{ .CommonAnnotations.summary }}'
+    text: |-
+      {{ range .Alerts }}
+         *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+        *Description:* {{ .Annotations.description }}
+        *Details:*
+        {{ range .Labels.SortedPairs }} . *{{ .Name }}:* `{{ .Value }}`
+        {{ end }}
+      {{ end }}
+    fallback: '{{ template "slack.default.fallback" . }}'
+    icon_emoji: '{{ template "slack.default.iconemoji" . }}'
+    icon_url: '{{ template "slack.default.iconurl" . }}'
+

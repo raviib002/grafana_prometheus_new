@@ -1,0 +1,186 @@
+{{ define "__alertmanager" }}Alertmanager{{ end }}
+{{ define "__alertmanagerURL" }}{{ .ExternalURL }}/#/alerts?receiver={{ .Receiver }}{{ end }}
+
+{{ define "__subject" }} [Alertmanager] {{ .Alerts.Firing | len }} NEW ALERT(S) {{ end }}
+{{ define "__subjectresolved" }} [Alertmanager] {{ .Alerts.Resolved | len }} RESOLVED ALERT(S) {{ end }}
+
+{{ define "__title" }} {{ .Alerts.Firing | len }} NEW ALERT(S) {{ end }}
+{{ define "__titleresolved" }} {{ .Alerts.Resolved | len }} RESOLVED ALERT(S) {{ end }}
+
+{{ define "__text_alert_list" }}{{ range . }}Labels:
+{{ range .Labels.SortedPairs }} - {{ .Name }} = {{ .Value }}
+{{ end }}Annotations:
+{{ range .Annotations.SortedPairs }} - {{ .Name }} = {{ .Value }}
+{{ end }}Source: {{ .GeneratorURL }}
+{{ end }}
+{{ end }}
+{{ define "slack.default.title" }}{{ template "__subject" . }}{{ end }}
+{{ define "slack.default.username" }}{{ template "__alertmanager" . }}{{ end }}
+{{ define "slack.default.fallback" }}{{ template "slack.default.title" . }} | {{ template "slack.default.titlelink" . }}{{ end }}
+{{ define "slack.default.callbackid" }}{{ end }}
+{{ define "slack.default.pretext" }}{{ end }}
+{{ define "slack.default.titlelink" }}{{ template "__alertmanagerURL" . }}{{ end }}
+{{ define "slack.default.iconemoji" }}{{ end }}
+{{ define "slack.default.iconurl" }}{{ end }}
+{{ define "slack.default.text" }}{{ end }}
+{{ define "slack.default.footer" }}{{ end }}
+{{ define "pagerduty.default.description" }}{{ template "__subject" . }}{{ end }}
+{{ define "pagerduty.default.client" }}{{ template "__alertmanager" . }}{{ end }}
+{{ define "pagerduty.default.clientURL" }}{{ template "__alertmanagerURL" . }}{{ end }}
+{{ define "pagerduty.default.instances" }}{{ template "__text_alert_list" . }}{{ end }}
+{{ define "email.default.subject" }}{{ if gt (len .Alerts.Firing) 0 }} {{ template "__subject" . }}  {{else}} {{ template "__subjectresolved" . }} {{end}} {{end}}
+
+{{ define "email.default.html" }}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Century Gothic', sans-serif; font-size:16px;">
+<head>
+<meta name="viewport" content="width=device-width" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/EmailMessage" style="background-color: #FFFFFF; color: #333333; margin-left: 32px;  margin-right: 32px;  margin-bottom: 32px;  margin-right: 32px; ">
+
+<table style="font-family:'Century Gothic', sans-serif; font-size: 16px  border-color: #CCCCCC; border-style: solid; border-width: 1px; border-top:0px;" cellpadding="0" cellspacing="0" width="800" height="auto" align="center" bordercolor="#CCCCCC">
+		
+		{{ if gt (len .Alerts.Firing) 0 }}	
+		<!--Red Border-->
+		<tr>		
+		<td  colspan="2" style="border-top-color: #F15A24;  border-top-style: solid;  border-top-width: 4px;" ></td>
+		</tr>
+		<!--Red Border-->
+		<!--Title -->
+		<tr>
+			<td style="padding-left: 32px; padding-top: 16px;" width="668">
+			<p style="font-family:'Calibri', sans-serif; font-size: 30px;  line-height: 20px; color:#F15A24">{{ template "__title" . }}</p>					
+			</td>
+			<td style="padding-left: 32px; padding-top: 16px; padding-right: 32px; "  align="right" nowrap>
+			<p  style="font-family: 'Century Gothic', Arial, sans-serif;  font-size: 16px;  margin-right: 32px;">			
+				View in <a href="{{ template "__alertmanagerURL" . }}" style="color: #0070B9;">{{ template "__alertmanager" . }}</a>		
+			</p>
+		    
+			</td>
+		</tr>
+		<!--Title -->
+		 {{else}}
+		<!--Blue Border--> 
+		<tr>
+		<td colspan="2" style="border-top-color: #00DFEB;  border-top-style: solid;  border-top-width: 4px;" ></td>
+		</tr>		
+		<!--Blue Border-->
+		<!--Title-->
+		 <tr>
+		 <td style="padding-left: 32px;  padding-top: 16px;"  >
+		 <p style="font-family:'Calibri', sans-serif; font-size: 30px; line-height: 20px; color:#00DFEB">{{ template "__titleresolved" . }}</p>		 
+        </td>
+			<td style="padding-left: 32px; padding-top: 16px; padding-right: 32px; "  align="right" nowrap>
+			<p  style="font-family: 'Century Gothic', Arial, sans-serif;  font-size: 16px; margin-right: 32px;">			
+				View in <a href="{{ template "__alertmanagerURL" . }}" style="color: #0070B9;">{{ template "__alertmanager" . }}</a>		
+			</p>
+		    
+			</td>
+		</tr>
+		<!--Title-->
+			{{end}}
+		</td>
+        </tr>
+                {{ range .Alerts.Firing }}
+				<!-- Alert Description-->
+                <tr>				  
+                  <td colspan="2" style="padding-left: 32px; padding-right: 32px; padding-top: 16px; padding-bottom: 16px;" >
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Alert Name:</strong> {{ .Labels.alertname }}</p>
+					{{ if le (len .Labels.database) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>IP Address:</strong> {{ .Labels.instance }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.severity) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Severity:</strong> {{ .Labels.severity }}</p>
+					{{ end }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Summary:</strong> {{ .Annotations.summary }}</p>
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Description:</strong> {{ .Annotations.description }}</p>
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Monitoring Job:</strong> {{ .Labels.job }}</p>
+					{{ if gt (len .Labels.device) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Device:</strong> {{ .Labels.device }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.mountpoint) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Mount Point:</strong> {{ .Labels.mountpoint }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.database) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Database Schema:</strong> {{ .Labels.database }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.cluster) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Cluster:</strong> {{ .Labels.cluster }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.env) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Server:</strong> {{ .Labels.env }}</p>
+					{{ end }}
+					<p style=" border-top-color: #CCCCCC;  border-top-style: solid;  border-top-width: 1px;">&nbsp;</p>
+                  </td>
+                </tr>
+                <!-- Alert Description-->
+				{{ end }}
+                {{ if gt (len .Alerts.Resolved) 0 }}
+                  {{ if gt (len .Alerts.Firing) 0 }}
+				 <tr>
+					<td colspan="2" style="border-top-color: #00DFEB;  border-top-style: solid;  border-top-width: 4px;" ></td>
+				</tr>	
+                <tr>
+                  <td colspan="2" style="font-family: 'Century Gothic', sans-serif; box-sizing: border-box; font-size: 16px; color: #333333; margin: 0; padding-left: 32px; padding-top: 16px; ">
+                    <p style="font-family:'Calibri', sans-serif; font-size: 30px; line-height: 20px; color:#00DFEB">{{ template "__titleresolved" . }}</p>		
+                  </td>
+                </tr>
+				<!--This should have New Alert Header Style-->
+                  {{ end }}
+              <!--  <tr>
+					<td >
+						 what is this?
+					</td>
+                </tr> -->
+				<!--This should have Resoulved Header Style-->
+                {{ end }}
+                {{ range .Alerts.Resolved }}
+				<!-- Alert Description-->
+                <tr>
+				
+                  <td colspan="2" style="padding-left: 32px; padding-right: 32px; padding-top: 16px; padding-bottom: 16px;" >
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Alert Name:</strong> {{ .Labels.alertname }}</p>
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>IP Address:</strong> {{ .Labels.instance }}</p>
+					{{ if gt (len .Labels.severity) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Severity:</strong> {{ .Labels.severity }}</p>
+					{{ end }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Summary:</strong> {{ .Annotations.summary }}</p>
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Description:</strong> {{ .Annotations.description }}</p>
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Monitoring Job:</strong> {{ .Labels.job }}</p>
+					{{ if gt (len .Labels.device) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Device:</strong> {{ .Labels.device }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.mountpoint) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Mount Point:</strong> {{ .Labels.mountpoint }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.database) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Database Schema:</strong> {{ .Labels.database }}</p>
+					{{ end }}
+					{{ if gt (len .Labels.cluster) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Cluster:</strong> {{ .Labels.cluster }}</p>
+					{{ end }}        
+					{{ if gt (len .Labels.env) 0 }}
+					<p style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #333333; "><strong>Server:</strong> {{ .Labels.env }}</p>
+					{{ end }}					
+					<p style=" border-top-color: #CCCCCC;  border-top-style: solid;  border-top-width: 1px;">&nbsp;</p>
+					</td>
+                </tr>
+                <!-- Alert Description-->
+				{{ end }}
+		
+				
+	<!--Footer-->
+	<tr>
+	
+		<td  colspan="2" style="padding-left: 32px; padding-right: 32px; padding-top: 0px; padding-bottom: 32px;" >	Sent by 	
+			<a href="{{ .ExternalURL }}" style="font-family:'Century Gothic', sans-serif; font-size: 16px; color: #0070B9; text-decoration: underline; margin: 0;">{{ template "__alertmanager" . }}</a>
+		</td>
+	</tr>
+	<!--Footer-->
+</table>
+</body>
+</html>
+{{ end }}
+

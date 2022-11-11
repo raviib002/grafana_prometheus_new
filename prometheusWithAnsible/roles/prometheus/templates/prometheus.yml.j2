@@ -1,0 +1,136 @@
+# my global config
+global:
+  scrape_interval:     60s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 60s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  scrape_timeout: 60s # is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - {{ alertmanager_url }}:{{ alertmanager_port }}
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - '/etc/prometheus/alert.rules'
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: cfrm_java_melody_fe
+    scheme: 'http'
+    metrics_path: '/InvestigationCenter/monitoring'
+    basic_auth:
+      username: 'wsUser'
+      password: 'wsUser'
+    params:
+      format: ['prometheus']
+    static_configs:
+      - targets: ['{{ FE_HOST }}:7780']
+        labels:
+          env: 'frontend'
+
+  - job_name: cfrm_java_melody_be
+    scheme: http
+    metrics_path: '/InvestigationCenter/monitoring'
+    basic_auth:
+      username: 'wsUser'
+      password: 'wsUser'
+    params:
+      format: ['prometheus']
+    static_configs:
+      - targets: ['{{ BE_HOST }}:7780']
+        labels:
+          env: 'backend'
+
+  - job_name: cfrm_node_fe
+    static_configs:
+      - targets: ['{{ nodeexp_url }}:{{ nodeexp_port }}']
+
+  - job_name: cfrm_node_be
+    static_configs:
+      - targets: ['{{ nodeexp_url }}:{{ nodeexp_port }}']
+
+  - job_name: cfrm_node_es
+    static_configs:
+      - targets: ['{{ nodeexp_url }}:{{ nodeexp_port }}']
+
+  - job_name: cfrm_es_app
+    static_configs:
+      - targets: ['{{ ES_HOST }}:9200']
+    metrics_path: '/_prometheus/metrics'
+
+  - job_name: cfrm_es_monitoring
+    static_configs:
+      - targets: ['{{ ES_MONITORING_HOST }}:9400']
+    metrics_path: '/_prometheus/metrics'
+
+  - job_name: cfrm_artemis
+    static_configs:
+      - targets: ['{{ ARTEMIS_HOST }}:9779']
+    metrics_path: '/metrics'
+
+  - job_name: cfrm_hazelcast
+    static_configs:
+      - targets: ['{{ BE_HOST }}:9779']
+    metrics_path: '/metrics'
+    
+  - job_name: cfrm_jobs
+    static_configs:
+      - targets: ['{{ FE_HOST }}:9779']
+    metrics_path: '/metrics'
+
+  - job_name: cfrm_app
+    static_configs:
+      - targets: ['{{ sqlexporter_url }}:{{ sqlexporter_port }}']
+    metrics_path: '/metrics'
+
+  - job_name: cfrm_http_probe
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+     - targets:
+        - http://{{ BE_HOST }}:7780/InvestigationCenter/
+        - http://{{ FE_HOST }}:7780/InvestigationCenter/
+        - http://{{ ARTEMIS_HOST }}:8161
+        - http://{{ ES_HOST }}:9200
+        - http://{{ ES_MONITORING_HOST }}:9400
+    relabel_configs:
+     - source_labels: [__address__]
+       target_label: __param_target
+     - source_labels: [__param_target]
+       target_label: instance
+     - target_label: __address__
+       replacement: {{ blackbox_url }}:{{ blackbox_port }} # The blackbox exporter
+
+  - job_name: cfrm_tcp_probe
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs: 
+     - targets: ['{{ APACHEDS_HOST }}:10389']
+    relabel_configs:
+     - source_labels: [__address__]
+       target_label: __param_target
+       replacement: ${1}
+     - source_labels: [__param_target]
+       regex: (.*)
+       target_label: instance
+       replacement: ${1}
+     - source_labels: [ ]
+       regex: .*
+       target_label: __address__
+       replacement: 127.0.0.1:9115

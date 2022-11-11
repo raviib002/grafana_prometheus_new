@@ -1,0 +1,279 @@
+
+groups:
+- name: System
+  rules:
+  - alert: High CPU Usage - Warning
+    expr: 100 * (1 - avg by(instance)(irate(node_cpu_seconds_total{mode='idle'}[5m]))) >= 93
+    for: 5m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'High CPU Usage on {{$labels.instance}}.'
+      description: 'CPU usage on {{$labels.instance}} is at {{$value}}% for the last 5 minutes.'
+
+  - alert: High CPU Usage - Critical
+    expr: 100 * (1 - avg by(instance)(irate(node_cpu_seconds_total{mode='idle'}[5m]))) >= 98
+    for: 5m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'High CPU Usage on {{$labels.instance}}.'
+      description: 'CPU usage on {{$labels.instance}} is at {{$value}}% for the last 5 minutes.'
+
+  - alert: High Memory Usage - Warning
+    expr: (((node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Cached_bytes) / (node_memory_MemTotal_bytes ) * 100)) >= 93
+    for: 10m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'High RAM Usage on {{$labels.instance}}.'
+      description: 'RAM usage on {{$labels.instance}} is at {{$value}}% for the last 10 minutes.'
+
+  - alert: High Memory Usage - Critical
+    expr: (((node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Cached_bytes) / (node_memory_MemTotal_bytes ) * 100)) >= 98
+    for: 5m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'High RAM Usage on {{$labels.instance}}.'
+      description: 'RAM usage on {{$labels.instance}} is at {{$value}}% for the last 10 minutes.'
+
+  - alert: Low Disk Space - Warning
+    expr: (100 - ((node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100)) < 7
+    for: 2m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'Low Disk Space on {{$labels.instance}}.'
+      description: 'Disk space on {{$labels.instance}} for {{$labels.mountpoint}} is at {{$value}}%.'
+
+  - alert: Low Disk Space - Critical
+    expr: (100 - ((node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100)) < 2
+    for: 2m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'Low Disk Space on {{$labels.instance}}.'
+      description: 'Disk space on {{$labels.instance}} for {{$labels.mountpoint}} is at {{$value}}%.'
+
+- name: ES
+  rules:
+  - alert: Elasticsearch Cluster - Red
+    expr: es_cluster_status == 2
+    for: 5m
+    labels:
+        severity: Critical  
+    annotations:
+      summary: 'Elasticsearch - Cluster is Red'
+      description: 'Elasticsearch cluster health is red on {{$labels.instance}} for the last 5 minutes.'
+
+  - alert: Elasticsearch Cluster - Yellow
+    expr: es_cluster_status == 1
+    for: 10m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'Elasticsearch - Cluster is Yellow'
+      description: 'Elasticsearch cluster health is yellow on {{$labels.instance}} for the last 10 minutes.'
+
+  - alert: Elasticsearch Cluster - Low Node Count
+    expr: es_cluster_nodes_number < 1
+    for: 5m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'Elasticsearch has fewer nodes running than initially configured'
+      description: 'Elasticsearch cluster has {{$value}} nodes running.'
+
+  - alert: Elasticsearch /data Folder Low Disk Space - Warning
+    expr: (100 - ((node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} - node_filesystem_free_bytes{device="/dev/mapper/datavg-data"}) / node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} * 100)) < 7
+    for: 2m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'Elasticsearch /data folder has low disk space.'
+      description: '{{$value}}% space remaining in {{$labels.mountpoint}} on {{$labels.instance}} .'
+
+  - alert: Elasticsearch /data Folder Low Disk Space - Critical
+    expr: (100 - ((node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} - node_filesystem_free_bytes{device="/dev/mapper/datavg-data"}) / node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} * 100)) < 2
+    for: 2m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'Elasticsearch /data folder has low disk space.'
+      description: '{{$value}}% space remaining in {{$labels.mountpoint}} on {{$labels.instance}} .'
+
+  - alert: Elasticsearch Old GC Count - Warning
+    expr: increase(es_jvm_gc_collection_count{gc="old"}[10m])>= 2
+    for: 1m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'At least 2 Old Garbage Collection processes occurred on {{$labels.instance}}'
+      description: 'At least 2 Old Garbage Collection processes occurred on {{$labels.instance}} in the last 10 minutes'
+
+  - alert: Elasticsearch Old GC Count - Critical
+    expr: increase(es_jvm_gc_collection_count{gc="old"}[10m]) >= 5
+    for: 1m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'At least 5 Old Garbage Collection process occurred on {{$labels.instance}}'
+      description: 'At least 5 Old Garbage Collection process occurred on {{$labels.instance}} in the last 10 minutes'
+- name: App
+  rules:
+  - alert: Tomcat Busy Threads - Warning
+    expr: avg_over_time(javamelody_tomcat_thread_busy_count{env=~"frontend|backend"}[5m]) >= 100
+    for: 5m
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'There are {{$value}} or more busy threads.'
+      description: '{{$labels.env}} has, on average, {{$value}} or more busy threads in the last 5 minutes'
+
+  - alert: Tomcat Busy Threads - Critical
+    expr: avg_over_time(javamelody_tomcat_thread_busy_count{env=~"frontend|backend"}[5m]) >= 150
+    for: 5m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'There are {{$value}} or more busy threads.'
+      description: '{{$labels.env}} has, on average, {{$value}} or more busy threads in the last 5 minutes'
+
+  - alert: CFRM - High Number of Errors
+    expr: increase(javamelody_log_errors_count{job=~"cfrm_java_melody_fe|cfrm_java_melody_be"}[30m]) >=1
+    for: 2m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'CFRM had multiple errors in the last 30 minutes'
+      description: 'The {{$labels.env}} server had a high number of errors in the last 30 minutes'
+
+  - alert: Hazelcast Cluster - Low Member Count
+    expr: com_hazelcast_embeddedinstancename_membercount < 2
+    for: 5m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'Hazelcast has fewer members than initially configured'
+      description: 'Hazelcast cluster has {{$value}} members.'
+
+  - alert: CFRM Old GC Count - Warning
+    expr: increase(java_lang_garbagecollector_collectioncount{name="G1 Old Generation"}[10m]) >= 1
+    labels:
+        severity: Warning
+    annotations:
+      summary: 'At least 1 Old Garbage Collection process occurred on {{$labels.instance}}'
+      description: 'At least 1 Old Garbage Collection process occurred on {{$labels.instance}} in the last 10 minutes'
+
+  - alert: CFRM Old GC Count - Critical
+    expr: increase(java_lang_garbagecollector_collectioncount{name="G1 Old Generation"}[10m]) >= 5
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'At least 5 Old Garbage Collection process occurred on {{$labels.instance}}'
+      description: 'At least 5 Old Garbage Collection process occurred on {{$labels.instance}} in the last 10 minutes'
+
+  - alert: CFRM - No Incoming Transactions
+    expr: increase(transactions[1d]) == 0 and increase(transactions[1d] offset 1w)>=1
+    for: 10s
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'CFRM had {{$value}} incoming transactions in the past day'
+      description: 'CFRM had {{$value}} incoming transactions in the past day, while there were transactions over the same period in the previous week'
+
+  - alert: CFRM - Low Number of Incoming Transactions
+    expr: ceil(increase(transactions[3h]) / increase(transactions[3h] offset 1w)*100) <=5 and increase(transactions[3h] offset 1w)>=20
+    for: 1m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'CFRM had a low number of incoming transactions in the past 3 hours compared to the same period last week'
+      description: 'The number of incoming transactions in the past 3 hours was {{$value}}% of the number of transactions during the same period in the previous week'
+
+  - alert: CFRM - Low Number of Alerts Generated 
+    expr: ceil(increase(alerts_total[1d]) / ((increase(alerts_total[1d] offset 1w) + increase(alerts_total[1d] offset 2w) + increase(alerts_total[1d] offset 3w) + increase(alerts_total[1d] offset 4w)) / 4)*100) <=80 and increase(alerts_total[1d] offset 1w)!=0 and increase (alerts_total[1d] offset 2w)!=0 and increase (alerts_total [1d] offset 3w) !=0 and increase (alerts_total[1d] offset 4w) !=0
+    for: 1m
+    labels:
+        severity: Critical
+    annotations:
+      summary: 'CFRM had a low number of generated alerts in the past day, compared to the same day of the week, over the last four weeks'
+      description: 'The number of alerts generated in the past day was {{$value}}% of the number of alerts generated on the same day, over the last four weeks'	  
+- name: Server - no response
+  rules:
+  - alert: Server - no response
+    expr: up{job="cfrm_http_probe"} == 0 or probe_success{job="cfrm_http_probe"} == 0
+    for: 10s
+    annotations:
+      summary:  '{{$labels.instance}} is not responding'
+      description: '{{$labels.instance}} has not been responding for the last 5 minutes'
+    labels:
+        severity: Critical
+
+- name: ApacheDS - no response
+  rules:
+   - alert: ApacheDS - no response
+     expr: probe_success{job="cfrm_tcp_probe"} == 0
+     for: 5m
+     annotations:
+       summary:  '{{$labels.instance}} is not responding'
+       description: '{{$labels.instance}} has not been responding for the last 5 minutes'
+     labels:
+         severity: Critical
+
+- name: ArtemisMQ
+  rules:
+   - alert: Artemis /data Folder Low Disk Space - Warning
+     expr: (100 - ((node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} - node_filesystem_free_bytes{device="/dev/mapper/datavg-data"}) / node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} * 100)) < 7
+     for: 2m
+     labels:
+        severity: Warning
+     annotations:
+       summary: 'Artemis /data folder has low disk space.'
+       description: '{{$value}}% space remaining in {{$labels.mountpoint}} on {{$labels.instance}} .'
+
+   - alert: Artemis /data Folder Low Disk Space - Critical
+     expr: (100 - ((node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} - node_filesystem_free_bytes{device="/dev/mapper/datavg-data"}) / node_filesystem_size_bytes{device="/dev/mapper/datavg-data"} * 100)) < 2
+     for: 2m
+     labels:
+        severity: Critical
+     annotations:
+       summary: 'Artemis /data folder has low disk space.'
+       description: '{{$value}}% space remaining in {{$labels.mountpoint}} on {{$labels.instance}} .'
+
+   - alert: Artemis Old GC Count - Warning
+     expr: increase(jvm_gc_collection_seconds_count{gc="G1 Old Generation", job="cfrm_artemis"}[10m]) >= 1
+     for: 1m
+     labels:
+        severity: Warning
+     annotations:
+       summary: 'At least 1 Old Garbage Collection process occurred on {{$labels.instance}}'
+       description: 'At least 1 Old Garbage Collection process occurred on {{$labels.instance}} in the last 10 minutes'
+
+   - alert: Artemis Old GC Count - Critical
+     expr: increase(jvm_gc_collection_seconds_count{gc="G1 Old Generation", job="cfrm_artemis"}[10m]) >= 5
+     for: 1m
+     labels:
+        severity: Critical
+     annotations:
+       summary: 'At least 5 Old Garbage Collection process occurred on {{$labels.instance}}'
+       description: 'At least 5 Old Garbage Collection process occurred on {{$labels.instance}} in the last 10 minutes'
+
+   - alert: Artemis Queuing Delay - Warning
+     expr: (((artemis_messages_acknowledged>0)/ (artemis_messages_added>0))*100) > 50 <= 75
+     for: 5m
+     labels:
+        severity: Warning
+     annotations:
+       summary: '{{$labels.queue}} response rate is at {{$value}}%'
+       description: '{{$labels.queue}} response rate is at {{$value}} for the last 5 minutes'
+
+   - alert: Artemis Queuing Delay - Critical
+     expr: (((artemis_messages_acknowledged>0)/ (artemis_messages_added>0))*100) <= 50
+     for: 10m
+     labels:
+        severity: Critical
+     annotations:
+       summary: '{{$labels.queue}} response rate is at {{$value}}%'
+       description: '{{$labels.queue}} response rate is at {{$value}} for the last 10 minutes'

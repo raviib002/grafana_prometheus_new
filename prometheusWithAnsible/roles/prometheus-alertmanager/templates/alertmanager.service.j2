@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Alert Manager service
+Wants=network-online.target
+After=network.target
+
+[Service]
+User={{userId}}
+Group={{groupId}}
+Type=simple
+ExecStart={{alert_usr_local_bin}}/alertmanager \
+    --config.file {{alertmanager_etc}}/alertmanager.yml \
+    --storage.path {{alert_storage_path}}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
