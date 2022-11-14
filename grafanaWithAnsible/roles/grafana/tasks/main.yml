@@ -54,6 +54,24 @@
   register: __command_admin
   changed_when: __command_admin.rc !=0
 
+- name: copying json files to grafana dashboard
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: '0755'
+  loop:
+    - { src: 'files/apache_artemis.json', dest: '{{ grafana_provisioning_dashboard }}/apache_artemis.json' }
+    - { src: 'files/Application_KPIs.json', dest: '{{ grafana_provisioning_dashboard }}/Application_KPIs.json' }
+    - { src: 'files/blackbox.json', dest: '{{ grafana_provisioning_dashboard }}/blackbox.json' }
+    - { src: 'files/CFRM_JOBS_DASHBOARD.json', dest: '{{ grafana_provisioning_dashboard }}/CFRM_JOBS_DASHBOARD.json' }
+    - { src: 'files/CFRM_System_Health.json', dest: '{{ grafana_provisioning_dashboard }}/CFRM_System_Health.json' }
+    - { src: 'files/elasticsearch.json', dest: '{{ grafana_provisioning_dashboard }}/elasticsearch.json' }
+    - { src: 'files/javamelody.json', dest: '{{ grafana_provisioning_dashboard }}/javamelody.json' }
+    - { src: 'files/nodeexporter.json', dest: '{{ grafana_provisioning_dashboard }}/nodeexporter.json' }
+  notify: event_restart_grafana
+
 - name: "Copy configuration files from template to configuration directory"
   template:
     src: "{{ item.src }}"
@@ -62,14 +80,6 @@
     - { src: 'grafana_ini.j2', dest: '{{ grafana_etc }}/grafana.ini' }
     - { src: 'dashboards_yaml.j2', dest: '{{ grafana_provisioning_dashboard }}/dashboards.yaml' }
     - { src: 'datasources_yaml.j2', dest: '{{ grafana_provisioning_datasources }}/datasources.yaml' }
-    - { src: 'apache_artemis.json', dest: '{{ grafana_provisioning_dashboard }}/apache_artemis.json' }
-    - { src: 'Application_KPIs.json', dest: '{{ grafana_provisioning_dashboard }}/Application_KPIs.json' }
-    - { src: 'blackbox.json', dest: '{{ grafana_provisioning_dashboard }}/blackbox.json' }
-    - { src: 'CFRM_JOBS_DASHBOARD.json', dest: '{{ grafana_provisioning_dashboard }}/CFRM_JOBS_DASHBOARD.json' }
-    - { src: 'CFRM_System_Health.json', dest: '{{ grafana_provisioning_dashboard }}/CFRM_System_Health.json' }
-    - { src: 'elasticsearch.json', dest: '{{ grafana_provisioning_dashboard }}/elasticsearch.json' }
-    - { src: 'javamelody.json', dest: '{{ grafana_provisioning_dashboard }}/javamelody.json' }
-    - { src: 'nodeexporter.json', dest: '{{ grafana_provisioning_dashboard }}/nodeexporter.json' }
   notify: event_restart_grafana
 
 - name: install grafana-piechart-panel plugin
