@@ -18,7 +18,7 @@
     state: directory
     owner: "{{userId}}"
     group: "{{groupId}}"
-    mode: 0755
+    mode: '0755'
   with_items:
     - "{{ alertmanager_etc }}"
     - "{{ var_lib_alertmanager }}"
@@ -39,7 +39,7 @@
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
-    mode: 0755
+    mode: '0755'
 
 #- name: Copy prometheus alertmanager.yml file to etc alertmanager directory
 #  copy:
@@ -61,8 +61,7 @@
     dest: "{{ item.dest }}"
     owner: "{{userId}}"
     group: "{{groupId}}"
-    remote_src: yes
-    mode: 0755
+    mode: '0755'
   loop:
     - { src: 'alertmanager.yml.j2', dest: '{{ alertmanager_etc }}/alertmanager.yml' }
     - { src: 'cfrm.tmpl.j2', dest: '{{ alert_template_path }}/cfrm.tmpl' }
@@ -88,7 +87,7 @@
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
-    mode: 0755
+    mode: '0755'
 
 - name: Creating a atmool config file 
   copy:
@@ -96,7 +95,7 @@
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
-    mode: 0755
+    mode: '0755'
     content: |
       alertmanager.url: "http://{{ localhost }}:{{ alertmanager_port }}"
 

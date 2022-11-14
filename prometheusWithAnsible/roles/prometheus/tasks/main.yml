@@ -45,8 +45,7 @@
     dest: "{{ item.dest }}"
     owner: "{{userId}}"
     group: "{{groupId}}"
-    remote_src: yes
-    mode: 0755
+    mode: '0755'
   loop:
     - { src: '/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus', dest: '{{ pro_usr_local_bin }}/prometheus' }
     - { src: '/tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool', dest: '{{ pro_usr_local_bin }}/promtool' }
@@ -76,8 +75,7 @@
     dest: "{{ prometheus_etc }}/prometheus.yml"
     owner: "{{userId}}"
     group: "{{groupId}}"
-    remote_src: yes
-    mode: 0755
+    mode: '0755'
   notify: event_restart_prometheus
 
 - name: config file
@@ -86,8 +84,7 @@
     dest: "{{ prometheus_etc }}/alert.rules"
     owner: "{{userId}}"
     group: "{{groupId}}"
-    remote_src: yes
-    mode: 0755
+    mode: '0755'
   notify: event_restart_prometheus
 
 - name: Copy systemd init file
