@@ -38,6 +38,14 @@
     remote_src: yes
     mode: '0755'
 
+- name: Copy prometheus blackbox exporter file to bin
+  copy:
+    src: "files/blackbox.yml"
+    dest: "{{ blackbox_etc }}/blackbox.yml"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: '0755'
+
 - name: Delete blackbox exporter tmp folder
   file:
     path: '/tmp/blackbox_exporter-{{ blackbox_version }}.linux-amd64'
@@ -51,7 +59,6 @@
     group: "{{groupId}}"
     mode: '0755'
   loop:
-    - { src: 'blackbox.yml.j2', dest: '{{ blackbox_etc }}/blackbox.yml' }
     - { src: 'blackbox_exporter.service.j2', dest: '{{ blackbox_etc_systemd }}/blackbox_exporter.service' }
   notify: event_restart_blackbox_exporter
 
