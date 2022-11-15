@@ -1,0 +1,13 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{userId}}
+Group={{groupId}}
+Type=simple
+ExecStart={{nodeexp_usr_local_bin}}/node_exporter
+
+[Install]
+WantedBy=multi-user.target

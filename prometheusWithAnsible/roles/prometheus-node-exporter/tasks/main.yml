@@ -25,7 +25,7 @@
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
-    mode: 0755
+    mode: '0755'
 
 - name: Delete node exporter tmp folder
   file:
@@ -34,8 +34,11 @@
 
 - name: Copy systemd init file
   template:
-    src: init.service.j2
+    src: node_exporter.service.j2
     dest: "{{ nodeexp_etc_systemd }}/node_exporter.service"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: '0755'
 
 - name: Start node_exporter service
   service:

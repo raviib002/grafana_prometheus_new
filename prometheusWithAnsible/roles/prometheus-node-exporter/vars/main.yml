@@ -1,2 +1,2 @@
 ---
-exec_command: "{{ nodeexp_usr_local_bin }}"/node_exporter
+#exec_command: "{{ nodeexp_usr_local_bin }}"/node_exporter
