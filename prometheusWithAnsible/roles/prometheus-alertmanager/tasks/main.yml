@@ -32,15 +32,6 @@
     dest: /tmp/
     remote_src: yes
 
-- name: Copy prometheus alertmanager file to bin
-  copy:
-    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager"
-    dest: "{{ alert_usr_local_bin }}/alertmanager"
-    owner: "{{userId}}"
-    group: "{{groupId}}"
-    remote_src: yes
-    mode: '0755'
-
 #- name: Copy prometheus alertmanager.yml file to etc alertmanager directory
 #  copy:
 #    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager.yml"
@@ -55,6 +46,21 @@
 #    src: init.service.j2
 #    dest: "{{ alertmanager_etc_systemd }}/alertmanager.service"
 
+- name: Copy alertmanager dependency amtool file to bin
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    remote_src: yes
+    mode: '0755'
+  loop:
+    - { src: '/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager', dest: '{{ alert_usr_local_bin }}/alertmanager' }
+    - { src: '/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/amtool', dest: '{{ alert_usr_local_bin }}/amtool' }
+    - { src: 'cfrm.tmpl', dest: '{{ alert_template_path }}/cfrm.tmpl' }
+    - { src: 'email.html', dest: '{{ alert_template_path }}/email.html' }
+    - { src: 'default.tmpl.bak', dest: '{{ alert_template_path }}/default.tmpl.bak' }
+
 - name: "Copy bin executable files to usr local bin directory"
   template:
     src: "{{ item.src }}"
@@ -64,8 +70,6 @@
     mode: '0755'
   loop:
     - { src: 'alertmanager.yml.j2', dest: '{{ alertmanager_etc }}/alertmanager.yml' }
-    - { src: 'cfrm.tmpl.j2', dest: '{{ alert_template_path }}/cfrm.tmpl' }
-    - { src: 'email.html', dest: '{{ alert_template_path }}/email.html' }
     - { src: 'alertmanager.service.j2', dest: '{{ alertmanager_etc_systemd }}/alertmanager.service' }
 
 - name: Start alertmanager service
@@ -79,15 +83,6 @@
     url: "http://{{ localhost }}:{{ alertmanager_port }}"
     method: GET
     status_code: 200
-
-- name: Copy alertmanager dependency amtool file to bin
-  copy:
-    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/amtool"
-    dest: "{{ alert_usr_local_bin }}/amtool"
-    owner: "{{userId}}"
-    group: "{{groupId}}"
-    remote_src: yes
-    mode: '0755'
 
 - name: Creating a atmool config file 
   copy:

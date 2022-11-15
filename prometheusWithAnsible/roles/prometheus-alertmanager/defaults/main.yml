@@ -19,5 +19,4 @@ alert_template_path: "/etc/alertmanager/template"
 
 SMTP_SMARTHOST: "10.70.8.170:25"
 EMAIL_ALERTS_RECEIVER: "user@mail.com"
-SLACK_API_URL: "https://hooks.slack.com/services/"
 ALERTMANAGER_TEMPLATES: "/etc/alertmanager/template/cfrm.tmpl"

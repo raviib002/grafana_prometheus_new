@@ -27,24 +27,3 @@ receivers:
   email_configs:
   - to: '{{ EMAIL_ALERTS_RECEIVER }}'
     send_resolved: true
-  slack_configs:
-  - send_resolved: true
-    api_url: '{{ SLACK_API_URL }}'
-    channel: '#monitoring'
-    username: '{{ template "slack.default.username" . }}'
-    color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
-    title: '{{ template "slack.default.title" . }}'
-    title_link: '{{ template "slack.default.titlelink" . }}'
-    pretext: '{{ .CommonAnnotations.summary }}'
-    text: |-
-      {{ range .Alerts }}
-         *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
-        *Description:* {{ .Annotations.description }}
-        *Details:*
-        {{ range .Labels.SortedPairs }} . *{{ .Name }}:* `{{ .Value }}`
-        {{ end }}
-      {{ end }}
-    fallback: '{{ template "slack.default.fallback" . }}'
-    icon_emoji: '{{ template "slack.default.iconemoji" . }}'
-    icon_url: '{{ template "slack.default.iconurl" . }}'
-
