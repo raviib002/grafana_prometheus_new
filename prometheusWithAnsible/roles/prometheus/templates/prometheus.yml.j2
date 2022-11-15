@@ -67,30 +67,30 @@ scrape_configs:
     static_configs:
       - targets: ['{{ nodeexp_url }}:{{ nodeexp_port }}']
 
-  - job_name: cfrm_es_app
-    static_configs:
-      - targets: ['{{ ES_HOST }}:9200']
-    metrics_path: '/_prometheus/metrics'
+#  - job_name: cfrm_es_app
+#    static_configs:
+#      - targets: ['{{ ES_HOST }}:9200']
+#    metrics_path: '/_prometheus/metrics'
 
-  - job_name: cfrm_es_monitoring
-    static_configs:
-      - targets: ['{{ ES_MONITORING_HOST }}:9400']
-    metrics_path: '/_prometheus/metrics'
+#  - job_name: cfrm_es_monitoring
+#    static_configs:
+#      - targets: ['{{ ES_MONITORING_HOST }}:9400']
+#    metrics_path: '/_prometheus/metrics'
 
-  - job_name: cfrm_artemis
-    static_configs:
-      - targets: ['{{ ARTEMIS_HOST }}:9779']
-    metrics_path: '/metrics'
+#  - job_name: cfrm_artemis
+#    static_configs:
+#      - targets: ['{{ ARTEMIS_HOST }}:9779']
+#    metrics_path: '/metrics'
 
-  - job_name: cfrm_hazelcast
-    static_configs:
-      - targets: ['{{ BE_HOST }}:9779']
-    metrics_path: '/metrics'
+#  - job_name: cfrm_hazelcast
+#    static_configs:
+#      - targets: ['{{ BE_HOST }}:9779']
+#    metrics_path: '/metrics'
     
-  - job_name: cfrm_jobs
-    static_configs:
-      - targets: ['{{ FE_HOST }}:9779']
-    metrics_path: '/metrics'
+#  - job_name: cfrm_jobs
+#    static_configs:
+#      - targets: ['{{ FE_HOST }}:9779']
+#    metrics_path: '/metrics'
 
   - job_name: cfrm_app
     static_configs:
