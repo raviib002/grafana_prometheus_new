@@ -57,9 +57,18 @@
   loop:
     - { src: '/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager', dest: '{{ alert_usr_local_bin }}/alertmanager' }
     - { src: '/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/amtool', dest: '{{ alert_usr_local_bin }}/amtool' }
-    - { src: 'cfrm.tmpl', dest: '{{ alert_template_path }}/cfrm.tmpl' }
-    - { src: 'email.html', dest: '{{ alert_template_path }}/email.html' }
-    - { src: 'default.tmpl.bak', dest: '{{ alert_template_path }}/default.tmpl.bak' }
+  
+- name: Copy alertmanager dependency amtool file to bin
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: '0755'
+  loop:
+    - { src: 'files/cfrm.tmpl', dest: '{{ alert_template_path }}/cfrm.tmpl' }
+    - { src: 'files/email.html', dest: '{{ alert_template_path }}/email.html' }
+    - { src: 'files/default.tmpl.bak', dest: '{{ alert_template_path }}/default.tmpl.bak' }
 
 - name: "Copy bin executable files to usr local bin directory"
   template:
