@@ -45,12 +45,20 @@
     dest: "{{ item.dest }}"
     owner: "{{userId}}"
     group: "{{groupId}}"
+    remote_src: yes
     mode: '0755'
   loop:
     - { src: '/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus', dest: '{{ pro_usr_local_bin }}/prometheus' }
     - { src: '/tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool', dest: '{{ pro_usr_local_bin }}/promtool' }
-    - { src: 'files/alert.rules', dest: '{{ prometheus_etc }}/alert.rules' }
 
+- name: "Copy alert rules files to prometheus config directory"
+  copy:
+    src: "files/alert.rules"
+    dest: "{{ prometheus_etc }}/alert.rules"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: '0755'
+    
 - name: "Copy console and libraries files to usr local bin directory"
   copy:
     src: "{{ item.src }}"
