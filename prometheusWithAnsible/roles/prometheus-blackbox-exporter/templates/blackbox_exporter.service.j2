@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus blackbox exporter
+After=network.target auditd.service
+
+[Service]
+User={{userId}}
+Group={{groupId}}
+Type=simple
+ExecStart={{blackbox_usr_local_bin}}/blackbox_exporter \
+    --config.file={{blackbox_etc}}/blackbox.yml
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

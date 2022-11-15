@@ -12,6 +12,17 @@
     createhome: "no"
     state: present
 
+- name: Creates directory
+  file: 
+    path: "{{ item }}"
+    state: directory
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: 0755
+  with_items:
+    - "{{ blackbox_data }}"
+    - "{{ blackbox_etc }}"
+
 - name: Install prometheus blackbox exporter
   unarchive:
     src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/blackbox_exporter/blackbox_exporter-{{ blackbox_version }}.linux-amd64.tar.gz"
@@ -25,32 +36,23 @@
     owner: "{{userId}}"
     group: "{{groupId}}"
     remote_src: yes
-    mode: 0755
+    mode: '0755'
 
 - name: Delete blackbox exporter tmp folder
   file:
     path: '/tmp/blackbox_exporter-{{ blackbox_version }}.linux-amd64'
     state: absent
 
-- name: Creates directory
-  file: 
-    path: "{{ blackbox_data }}"
-    state: directory
-    owner: "{{userId}}"
-    group: "{{groupId}}"
-    mode: 0755
-
 - name: Copy blackbox exporter config file
   template:
-    src: blackbox.yml.j2
-    dest: "{{ blackbox_data }}/blackbox.yml"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{userId}}"
     group: "{{groupId}}"
-
-- name: Copy systemd init file
-  template:
-    src: init.service.j2
-    dest: "{{ blackbox_etc_systemd }}/blackbox_exporter.service"
+    mode: '0755'
+  loop:
+    - { src: 'blackbox.yml.j2', dest: '{{ blackbox_etc }}/blackbox.yml' }
+    - { src: 'blackbox_exporter.service.j2', dest: '{{ blackbox_etc_systemd }}/blackbox_exporter.service' }
   notify: event_restart_blackbox_exporter
 
 - name: Start blackbox_exporter service
