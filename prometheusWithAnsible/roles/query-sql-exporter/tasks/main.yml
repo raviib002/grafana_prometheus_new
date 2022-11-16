@@ -33,12 +33,12 @@
     mode: 0775
 
 - name: Copy config yml file into var directory
-  template:
+  templates:
     src: config.yaml
     dest: /var/config.yaml
 
 - name: Copy config yml file updater shell script into var directory
-  template:
+  templates:
     src: config_yml_updater.j2
     dest: /var/update_config_yml.sh
 
@@ -49,12 +49,12 @@
   shell: "cp -r /var/config.yaml {{ sqlexp_data }}/"
 
 - name: Copy oracle path shell script file into etc profile.d directory to set ld library path
-  template:
+  templates:
     src: oracle_path.sh
     dest: "{{ sqlexp_etc_profile }}/oracle_path.sh"
   
 - name: Copy sqlexporter service file into systemd directory
-  template:
+  templates:
     src: sqlexporter.service
     dest: "{{ sqlexp_etc_systemd }}/sqlexporter.service"
   notify: event_restart_sqlexporter

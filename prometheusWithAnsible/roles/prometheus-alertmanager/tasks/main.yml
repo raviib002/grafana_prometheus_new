@@ -71,7 +71,7 @@
     - { src: 'files/default.tmpl.bak', dest: '{{ alert_template_path }}/default.tmpl.bak' }
 
 - name: "Copy bin executable files to usr local bin directory"
-  template:
+  templates:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{userId}}"

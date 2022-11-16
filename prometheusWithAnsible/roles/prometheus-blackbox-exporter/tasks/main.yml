@@ -52,14 +52,12 @@
     state: absent
 
 - name: Copy blackbox exporter config file
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+  templates:
+    src: "blackbox_exporter.service.j2"
+    dest: "{{ blackbox_etc_systemd }}/blackbox_exporter.service"
     owner: "{{userId}}"
     group: "{{groupId}}"
     mode: '0755'
-  loop:
-    - { src: 'blackbox_exporter.service.j2', dest: '{{ blackbox_etc_systemd }}/blackbox_exporter.service' }
   notify: event_restart_blackbox_exporter
 
 - name: Start blackbox_exporter service

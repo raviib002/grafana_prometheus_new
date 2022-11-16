@@ -33,14 +33,14 @@
     state: absent
 
 - name: Copy systemd init file
-  template:
+  templates:
     src: node_exporter.service.j2
     dest: "{{ nodeexp_etc_systemd }}/node_exporter.service"
     owner: "{{userId}}"
     group: "{{groupId}}"
     mode: '0755'
   notify: event_restart_node_exporter
-
+  
 - name: Start node_exporter service
   service:
     name: "{{ nodeexp_serviceName }}"
