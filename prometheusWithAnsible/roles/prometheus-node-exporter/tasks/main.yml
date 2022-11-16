@@ -39,6 +39,7 @@
     owner: "{{userId}}"
     group: "{{groupId}}"
     mode: '0755'
+  notify: event_restart_node_exporter
 
 - name: Start node_exporter service
   service:

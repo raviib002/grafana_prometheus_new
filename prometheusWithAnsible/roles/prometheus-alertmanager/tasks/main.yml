@@ -80,6 +80,7 @@
   loop:
     - { src: 'alertmanager.yml.j2', dest: '{{ alertmanager_etc }}/alertmanager.yml' }
     - { src: 'alertmanager.service.j2', dest: '{{ alertmanager_etc_systemd }}/alertmanager.service' }
+  notify: event_restart_alertmanager
 
 - name: Start alertmanager service
   service:

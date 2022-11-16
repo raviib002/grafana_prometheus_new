@@ -57,6 +57,7 @@
   template:
     src: sqlexporter.service
     dest: "{{ sqlexp_etc_systemd }}/sqlexporter.service"
+  notify: event_restart_sqlexporter
 
 - name: Delete config yaml file from var folder
   file:
