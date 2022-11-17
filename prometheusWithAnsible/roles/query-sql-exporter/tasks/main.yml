@@ -86,3 +86,9 @@
   until: __result.status == 200
   retries: 20
   delay: 1
+
+- name: start service sqlexporter
+  systemd:
+    name: "{{ sqlexp_serviceName }}"
+    state: restarted
+    enabled: yes

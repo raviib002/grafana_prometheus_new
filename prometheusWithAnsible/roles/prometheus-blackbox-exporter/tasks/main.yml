@@ -52,7 +52,7 @@
     state: absent
 
 - name: Copy blackbox exporter config file
-  templates:
+  template:
     src: "blackbox_exporter.service.j2"
     dest: "{{ blackbox_etc_systemd }}/blackbox_exporter.service"
     owner: "{{userId}}"
@@ -71,6 +71,12 @@
     url: "http://{{ localhost }}:{{ blackbox_port }}"
     method: GET
     status_code: 200
+
+- name: Start blackbox_exporter service
+  service:
+    name: "{{ blackbox_serviceName }}"
+    state: restarted
+    enabled: yes
 
 - name: Restart prometheus service
   service:

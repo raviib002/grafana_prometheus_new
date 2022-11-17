@@ -1,0 +1,23 @@
+---
+os_nodes: |-
+        {% for item in groups['opensearch'] | intersect(groups[deploy_site]) -%}
+          {{ item }}{% if not loop.last %}","{% endif %}
+        {%- endfor %}
+
+populate_inventory_to_hosts_file: true
+
+os_dashboards_home: /usr/share/opensearch-dashboards
+os_conf_dir: /usr/share/opensearch-dashboards/config
+os_plugin_bin_path: /usr/share/opensearch-dashboards/bin/opensearch-dashboards-plugin
+
+os_dashboards_user: opensearch-dashboards
+os_download_url: https://nexus.cfrm.dev.local/repository/devops-artifacts/opensearch
+os_api_port: 9200
+os_nodes_dashboards: |-
+        {% for item in groups['opensearch'] | intersect(groups[deploy_site]) -%}
+          http://{{ item }}:9200{% if not loop.last %}","{% endif %}
+        {%- endfor %}
+
+os_dashboards_version: "1.2.0"
+
+systemctl_path: /etc/systemd/system

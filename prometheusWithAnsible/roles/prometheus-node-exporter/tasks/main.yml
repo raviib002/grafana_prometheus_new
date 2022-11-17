@@ -33,7 +33,7 @@
     state: absent
 
 - name: Copy systemd init file
-  templates:
+  template:
     src: node_exporter.service.j2
     dest: "{{ nodeexp_etc_systemd }}/node_exporter.service"
     owner: "{{userId}}"
@@ -52,6 +52,12 @@
     url: "http://{{ localhost }}:{{ nodeexp_port }}/metrics"
     method: GET
     status_code: 200
+
+- name: Start node_exporter service
+  service:
+    name: "{{ nodeexp_serviceName }}"
+    state: restarted
+    enabled: yes
 
 - name: Restart prometheus service
   service:

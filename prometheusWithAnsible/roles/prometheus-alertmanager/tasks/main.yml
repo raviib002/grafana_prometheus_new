@@ -71,7 +71,7 @@
     - { src: 'files/default.tmpl.bak', dest: '{{ alert_template_path }}/default.tmpl.bak' }
 
 - name: "Copy bin executable files to usr local bin directory"
-  templates:
+  template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{userId}}"
@@ -111,6 +111,12 @@
 #    echo "    scrape_interval: 5s" >> {{ alertmanager_etc }}/prometheus.conf
 #    echo "    static_configs:" >> {{ alertmanager_etc }}/prometheus.conf
 #    echo "      - targets: ['{{ localhost }}:{{ alertmanager_port }}']" >> {{ alertmanager_etc }}/prometheus.conf
+
+- name: Start alertmanager service
+  service:
+    name: "{{ alertmanager_serviceName }}"
+    state: restarted
+    enabled: yes
 
 - name: Restart prometheus service
   service:

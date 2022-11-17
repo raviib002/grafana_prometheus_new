@@ -1,0 +1,5 @@
+- name: install monitoring stack
+  hosts: localhost
+  become: yes
+  roles:
+  - opensearch_dashboards
