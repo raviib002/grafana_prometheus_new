@@ -32,5 +32,11 @@
   debug:
     msg: "{{ list_plugins.stdout }}"
 
+- name: "Copy configuration files from template to configuration directory"
+  template:
+    src: "dashboard.ndjson"
+    dest: "/home/dashboard.ndjson"
+
 - name: shell command
-  shell: 'curl -H "Content-Type: application/x-ndjson" -POST https://<URL>/_dashboards/api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true -u 'admin:admin' --insecure --data-binary "@metricbeat-7.12.1-linux-x86_64/kibana/7/dashboard/Metricbeat-system-overview.json"'
+  shell: 'curl -H "Content-Type: application/x-ndjson" -POST https://{{ opensearch_dashboard_host }}/_dashboards/api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true -u 'admin:admin' --insecure --data-binary "@/home/dashboard.ndjson"'
+  
