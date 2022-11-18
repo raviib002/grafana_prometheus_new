@@ -1,11 +1,12 @@
 ---
 # defaults file for roles/grafana
+nodeexp_rpm_file_url: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/node-exporter/node_exporter-{{ nodeexp_version }}.linux-amd64.tar.gz"
+nodeexp_version: "1.2.0"
 
 nodeexp_serviceName: "node_exporter"
 prometheus_serviceName: "prometheus"
 userId: "node_exporter"
 groupId: "node_exporter"
-nodeexp_version: "1.2.0"
 nodeexp_port: "9100"
 localhost: "localhost"
 

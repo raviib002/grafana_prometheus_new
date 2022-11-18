@@ -1,2 +1,3 @@
 ---
 #exec_command: "{{ blackbox_usr_local_bin }}"/blackbox_exporter --config.file "{{ blackbox_data }}"/blackbox.yml
+blackbox_version: "0.22.0"

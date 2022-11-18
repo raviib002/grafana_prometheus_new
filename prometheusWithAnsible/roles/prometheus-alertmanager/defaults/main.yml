@@ -1,11 +1,12 @@
 ---
 # defaults file for roles/grafana
+alertmanager_rpm_file_url: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/alertmanager/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+alertmanager_version: "0.24.0"
 
 alertmanager_serviceName: "alertmanager"
 prometheus_serviceName: "prometheus"
 userId: "alertmanager"
 groupId: "alertmanager"
-alertmanager_version: "0.24.0"
 localhost: "localhost"
 alertmanager_port: "9093"
 

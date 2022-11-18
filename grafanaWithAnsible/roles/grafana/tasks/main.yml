@@ -16,7 +16,7 @@
 
 - name: install grafana-{{ grafan_version }} from nexus
   yum:
-    name: https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ grafan_version }}.x86_64.rpm
+    name: "{{ grafana_rpm_file_url }}"
     state: present
 
 - name: Creates grafana data directory

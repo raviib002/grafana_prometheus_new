@@ -26,7 +26,7 @@
 
 - name: Install prometheus
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/prometheus/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    src: "{{ prmotheus_rpm_file_url }}"
     dest: /tmp/
     remote_src: yes
 

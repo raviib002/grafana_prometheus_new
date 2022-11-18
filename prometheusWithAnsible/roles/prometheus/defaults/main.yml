@@ -1,12 +1,13 @@
 ---
 # defaults file for roles/grafana
+prmotheus_rpm_file_url: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/prometheus/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+prometheus_version: "2.37.0"
 
 pro_usr_local_bin: "/usr/local/bin"
 pro_systemd_service: "/etc/systemd/system"
 prometheus_data: "/data/prometheus"
 prometheus_etc: "/etc/prometheus"
 prometheus_var_lib: "/var/lib/prometheus"
-prometheus_version: "2.37.0"
 localhost: "localhost"
 prometheus_serviceName: "prometheus"
 userId: "prometheus"

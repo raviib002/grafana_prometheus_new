@@ -1,6 +1,9 @@
 ---
 # defaults file for roles/grafana
 
+grafana_rpm_file_url: "https://nexus.cfrm.dev.local/repository/grafana/Packages/g/grafana-{{ grafan_version }}.x86_64.rpm"
+grafan_version: "8.3.3-1"
+
 localhost: "127.0.0.1"
 grafana_admin_user: "admin"
 grafana_admin_password: "mypassword"
@@ -19,8 +22,6 @@ grafana_logs: "/data/grafana/logs"
 grafana_provisioning: "/data/grafana/provisioning"
 grafana_provisioning_dashboard: "/data/grafana/provisioning/dashboards"
 grafana_provisioning_datasources: "/data/grafana/provisioning/datasources"
-
-grafan_version: "8.3.3-1"
 
 grafana_url: "127.0.0.1"
 grafana_port: "3000"

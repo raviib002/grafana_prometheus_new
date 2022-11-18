@@ -28,7 +28,7 @@
 
 - name: Install prometheus alertmanager
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/alertmanager/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+    src: "{{ alertmanager_rpm_file_url }}"
     dest: /tmp/
     remote_src: yes
 

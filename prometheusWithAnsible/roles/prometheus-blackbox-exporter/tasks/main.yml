@@ -25,7 +25,7 @@
 
 - name: Install prometheus blackbox exporter
   unarchive:
-    src: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/blackbox_exporter/blackbox_exporter-{{ blackbox_version }}.linux-amd64.tar.gz"
+    src: "{{ blackbox_rpm_file_url }}"
     dest: /tmp/
     remote_src: yes
 
