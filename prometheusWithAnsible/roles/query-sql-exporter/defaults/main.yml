@@ -1,5 +1,17 @@
 ---
 # defaults file for roles/grafana
+nexus_base_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/"
+libaio_dep_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/libaio-0.3.109-13.el7.x86_64.rpm"
+oracleclient_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/oracle-instantclient12.2-basic-{{ oracleclient_version }}.x86_64.rpm"
+oracleclient_version: "12.2.0.1.0-1"
+postgresql_libs_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-libs-{{ postgresql_libs_version }}.x86_64.rpm"
+postgresql_libs_version: "9.2.24-1.el7_5"
+postgresql_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-{{ postgresql_version }}.x86_64.rpm"
+postgresql_version: "9.2.24-1.el7_5"
+postgresql_devel_url: "https://nexus.cfrm.dev.local/repository/cfrm-yum-repo/postgresql-devel-{{ postgresql_devel_version }}.x86_64.rpm"
+postgresql_devel_version: "9.2.24-1.el7_5"
+queryexporter_pex_url: "https://nexus.cfrm.dev.local/repository/devops-artifacts/prometheus/query-exporter/query-exporter-{{ queryexporter_version }}.pex"
+queryexporter_version: "2.6.2"
 
 sqlexp_data: "/data/sqlexporter_config"
 sqlexp_etc_profile: "/etc/profile.d"

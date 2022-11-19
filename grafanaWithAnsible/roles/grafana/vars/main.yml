@@ -1,8 +1,5 @@
 ---
 # vars file for roles/grafana
-grafana_piechart_panel: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-piechart-panel/grafana-piechart-panel-1.6.2.zip"
-prometheus_alertmanager_datasource: "https://nexus.cfrm.dev.local/repository/devops-artifacts/grafana-plugins/grafana-prometheus-alertmanager-datasource/grafana-prometheus-alertmanager-datasource-1.0.0.zip"
-
 grafana_url: "127.0.0.1"
 grafana_port: "3000"
 prometheus_url: "127.0.0.1"
@@ -11,3 +8,5 @@ alertmanager_url: "127.0.0.1"
 alertmanager_port: "9093"
 
 grafan_version: "8.3.3-1"
+grafana_piechart_panel_version: "1.6.2"
+prometheus_alertmanager_datasource_version: "1.0.0"
