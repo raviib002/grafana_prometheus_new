@@ -87,7 +87,7 @@
   retries: 20
   delay: 1
 
-- name: start service sqlexporter
+- name: restart service sqlexporter
   systemd:
     name: "{{ sqlexp_serviceName }}"
     state: restarted
