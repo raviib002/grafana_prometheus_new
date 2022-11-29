@@ -21,3 +21,6 @@ os_nodes_dashboards: |-
 os_dashboards_version: "1.2.0"
 
 systemctl_path: /etc/systemd/system
+
+opensearch_dashboard_host: "il02vlmon5002.cfrm.dev.local"
+opensearch_dashboard_port: "5601"
