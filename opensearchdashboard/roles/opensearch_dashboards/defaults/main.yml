@@ -25,4 +25,4 @@ systemctl_path: /etc/systemd/system
 opensearch_dashboard_host: "il02vlmon5002.cfrm.dev.local"
 opensearch_dashboard_port: "5601"
 
-curl_retries: '{"test":"test1-test"},-{"test5":"test8-tes2"}'
+curl_retries: '{"type":"index-pattern","id":"033e2230-aa97-11ec-b195-65488f4767a0","destinationId":"d4347ae9-869c-408f-b324-1d5f1007e42c"},{"type":"index-pattern","id":"54bfd5e0-bbd1-11ec-b195-65488f4767a0","destinationId":"40cf32db-1d5a-4f6f-a09b-e0678dfed186"},{"type":"visualization","id":"129f15c0-5e90-11ec-9278-9fa9e658b2cb","destinationId":"b8382261-3876-42b6-a38e-efac08200e40"},{"type":"index-pattern","id":"c2fc3e50-aa96-11ec-b195-65488f4767a0","destinationId":"21221df9-becd-48a0-b7aa-fae5a75031ea"},{"type":"visualization","id":"28a47c60-5e91-11ec-9278-9fa9e658b2cb","destinationId":"12545fca-f30d-4afe-9eed-71e1704a5113"},{"type":"visualization","id":"32bf6ea0-5e94-11ec-9278-9fa9e658b2cb","destinationId":"3a0ce677-cca0-4b3e-816d-52595800ea63"}'
