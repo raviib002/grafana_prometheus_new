@@ -25,4 +25,4 @@ systemctl_path: /etc/systemd/system
 opensearch_dashboard_host: "il02vlmon5002.cfrm.dev.local"
 opensearch_dashboard_port: "5601"
 
-curl_retries: '{"test", "test"},{"test2":"test5"}'
+curl_retries: '{"test", "test"},{"test2":"test5-test"}'
